@@ -2,7 +2,11 @@ const nodemailer = require('nodemailer')
 
 const EMAIL_ADDRESS = String(process.env.EMAIL_ADDRESS || '').trim()
 const GMAIL_PASSKEY = String(process.env.GMAIL_PASSKEY || '').trim()
-const FRONTEND_URL = String(process.env.FRONTEND_URL || '').trim()
+const FRONTEND_URL = String(
+  process.env.NODE_ENV === 'production'
+    ? process.env.FRONTEND_URL
+    : 'http://localhost:3000',
+).trim()
 
 const logoUrl =
   'https://firebasestorage.googleapis.com/v0/b/stylegenerateai.firebasestorage.app/o/technical%2Flogo%2Flogo.png?alt=media&token=5f00d82a-fb91-42a3-b0ca-a5d0b9784428'
