@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  app:
+    image: yuriydovzhyk/stylegenerateai
+    ports:
+      - "4000:4000"
