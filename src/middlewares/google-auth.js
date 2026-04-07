@@ -2,17 +2,15 @@ const passport = require('passport')
 const { Strategy } = require('passport-google-oauth2')
 const bcrypt = require('bcrypt')
 const shortid = require('shortid')
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL_HEROKU } =
-  process.env
+
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL_HEROKU } = process.env
 
 const { User } = require('../models/user.model')
-
-// const callbackURL = `${BASE_URL_HEROKU}/api/google/callback`
 
 const callbackURL =
   process.env.NODE_ENV === 'production'
     ? `${BASE_URL_HEROKU}/api/google/callback`
-    : `http://localhost:4000/api/google/callback`
+    : 'http://localhost:4000/api/google/callback'
 
 const googleParams = {
   clientID: GOOGLE_CLIENT_ID,
@@ -30,36 +28,31 @@ const googleCallback = async (
 ) => {
   try {
     const date = new Date()
-    const today = `${date.getFullYear()}-${
-      date.getMonth() + 1
-    }-${date.getDate()}`
+    const today = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
 
     const { email, given_name, picture } = profile
-    const user = await User.findOne({ email })
-    if (user) {
-      await User.findOneAndUpdate(
-        { email },
-        { referer: req.session.referer },
-        { new: true },
-      )
-      return done(null, user)
+
+    const existingUser = await User.findOne({ email })
+    if (existingUser) {
+      return done(null, existingUser)
     }
-    const password = await bcrypt.hash(shortid.generate(), 10)
+
+    const passwordHash = await bcrypt.hash(shortid.generate(), 10)
+
     const newUser = await User.create({
-      email: email,
-      passwordHash: password,
+      email,
+      passwordHash,
       username: given_name,
       userAvatar: picture,
       dateCreate: today,
-      referer: req.session.referer,
     })
+
     return done(null, newUser)
   } catch (error) {
     done(error, false)
   }
 }
 
-const googleStrategy = new Strategy(googleParams, googleCallback)
-passport.use('google', googleStrategy)
+passport.use('google', new Strategy(googleParams, googleCallback))
 
 module.exports = passport

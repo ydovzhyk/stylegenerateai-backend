@@ -247,11 +247,17 @@ const deleteUserController = async (req, res, next) => {
 // GOOGLE AUTH
 const googleAuthController = async (req, res, next) => {
   try {
-    const origin = req.session.origin
+    const origin =
+      req.session?.origin ||
+      (process.env.NODE_ENV === 'production'
+        ? `${process.env.FRONTEND_URL}`
+        : 'http://localhost:3000')
+
     const { accessToken, refreshToken } = signTokens(req.user._id)
     setAuthCookies(res, { accessToken, refreshToken })
 
     console.log('Origin from session:', origin)
+
     return res.redirect(origin)
   } catch (error) {
     next(error)

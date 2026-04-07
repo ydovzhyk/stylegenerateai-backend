@@ -47,7 +47,14 @@ app.use(
   session({
     secret: GOOGLE_CLIENT_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    proxy: true,
+    cookie: {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 10 * 60 * 1000,
+    },
   }),
 )
 app.use('/api/google', googleRoutes)
