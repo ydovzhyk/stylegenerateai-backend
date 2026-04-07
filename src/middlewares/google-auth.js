@@ -8,7 +8,6 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL_HEROKU } =
 const { User } = require('../models/user.model')
 
 const callbackURL = `${BASE_URL_HEROKU}/api/google/callback`
-console.log('Google OAuth callback URL:', callbackURL)
 
 const googleParams = {
   clientID: GOOGLE_CLIENT_ID,
