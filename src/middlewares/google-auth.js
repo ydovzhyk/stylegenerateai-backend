@@ -9,6 +9,8 @@ const {
   BASE_URL_HEROKU,
 } = process.env
 
+console.log('production', process.env.NODE_ENV)
+
 const { User } = require('../models/user.model')
 
 let callbackURL
