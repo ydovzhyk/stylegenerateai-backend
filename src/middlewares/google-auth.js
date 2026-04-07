@@ -17,6 +17,8 @@ const callbackURL =
     ? `${BASE_URL_HEROKU}/api/google/callback`
     : `http://localhost:4000/api/google/callback`
 
+console.log('Google OAuth callback URL:', callbackURL)
+
 const googleParams = {
   clientID: GOOGLE_CLIENT_ID,
   clientSecret: GOOGLE_CLIENT_SECRET,
