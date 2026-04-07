@@ -21,7 +21,7 @@ app.use(logger(formatsLogger))
 /** CORS **/
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://style-generate-ai.vercel.app/',
+  'https://style-generate-ai.vercel.app',
 ].filter(Boolean)
 
 const corsOptions = {
