@@ -251,6 +251,7 @@ const googleAuthController = async (req, res, next) => {
     const { accessToken, refreshToken } = signTokens(req.user._id)
     setAuthCookies(res, { accessToken, refreshToken })
 
+    console.log('Origin from session:', origin)
     return res.redirect(origin)
   } catch (error) {
     next(error)
