@@ -7,7 +7,6 @@ const router = express.Router()
 const rememberOrigin = (req, res, next) => {
   const { origin } = req.query
   if (origin) req.session.origin = origin
-  console.log('Remembered origin:', req.session.origin)
   next()
 }
 
