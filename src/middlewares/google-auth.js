@@ -2,13 +2,12 @@ const passport = require('passport')
 const { Strategy } = require('passport-google-oauth2')
 const bcrypt = require('bcrypt')
 const shortid = require('shortid')
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL_HEROKU, BASE_URL } =
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL_HEROKU } =
   process.env
 
 const { User } = require('../models/user.model')
 
-const callbackURL =
-process.env.NODE_ENV === 'production' ? `${BASE_URL_HEROKU}/api/google/callback` : `${BASE_URL}/api/google/callback`
+const callbackURL = `${BASE_URL_HEROKU}/api/google/callback`
 
 const googleParams = {
   clientID: GOOGLE_CLIENT_ID,
