@@ -7,11 +7,7 @@ const router = express.Router()
 
 router.get('/', (req, res, next) => {
   const { origin } = req.query
-
-  if (!origin) {
-    return res.status(400).json({ message: 'Origin is required' })
-  }
-
+  console.log('Received origin:', origin)
   req.session.origin = origin
 
   req.session.save((err) => {
