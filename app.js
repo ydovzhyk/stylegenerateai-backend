@@ -4,14 +4,12 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 
-const passport = require('./src/middlewares/google-auth')
-
 const readyTemplateRoutes = require('./src/routes/readyTemplate.routes')
 const authRoutes = require('./src/routes/auth.routes')
 const visitorRoutes = require('./src/routes/visitor.routes')
 const googleRoutes = require('./src/routes/google.routes')
 
-const { NODE_ENV, SESSION_SECRET } = process.env
+const { GOOGLE_CLIENT_SECRET, NODE_ENV } = process.env
 
 const app = express()
 
@@ -47,19 +45,11 @@ app.use('/api/visitor', visitorRoutes)
 app.use(
   '/api/google',
   session({
-    secret: SESSION_SECRET,
+    secret: GOOGLE_CLIENT_SECRET,
     resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: NODE_ENV === 'production',
-      sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
-      maxAge: 10 * 60 * 1000, // 10 min
-    },
+    saveUninitialized: true,
   }),
 )
-
-app.use('/api/google', passport.initialize())
 app.use('/api/google', googleRoutes)
 
 app.get('/api/health', (req, res) => {

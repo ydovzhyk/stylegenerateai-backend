@@ -1,24 +1,14 @@
 const passport = require('passport')
 const { Strategy } = require('passport-google-oauth2')
-const bcrypt = require('bcryptjs')
-const { nanoid } = require('nanoid')
-
-const {
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  BASE_URL_HEROKU,
-} = process.env
-
-console.log('production', process.env.NODE_ENV)
+const bcrypt = require('bcrypt')
+const shortid = require('shortid')
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL_HEROKU } =
+  process.env
 
 const { User } = require('../models/user.model')
 
-let callbackURL
-if (process.env.NODE_ENV === 'production') {
-  callbackURL = `${BASE_URL_HEROKU}/api/google/callback`
-} else {
-  callbackURL = `http://localhost:4000/api/google/callback`
-}
+const callbackURL =
+process.env.NODE_ENV === 'production' ? `${BASE_URL_HEROKU}/api/google/callback` : `http://localhost:4000/api/google/callback`
 
 const googleParams = {
   clientID: GOOGLE_CLIENT_ID,
@@ -35,42 +25,37 @@ const googleCallback = async (
   done,
 ) => {
   try {
-    const email = profile.email || profile.emails?.[0]?.value
-    const givenName = profile.given_name || profile.name?.givenName
-    const picture = profile.picture || profile.photos?.[0]?.value
+    const date = new Date()
+    const today = `${date.getFullYear()}-${
+      date.getMonth() + 1
+    }-${date.getDate()}`
 
-    if (!email) {
-      return done(new Error('Google account email is not available'), false)
-    }
-
-    const normalizedEmail = String(email).trim().toLowerCase()
-
-    let user = await User.findOne({ email: normalizedEmail })
-
+    const { email, given_name, picture } = profile
+    const user = await User.findOne({ email })
     if (user) {
-      if (!user.userAvatar && picture) {
-        user.userAvatar = picture
-        await user.save()
-      }
-
+      await User.findOneAndUpdate(
+        { email },
+        { referer: req.session.referer },
+        { new: true },
+      )
       return done(null, user)
     }
-
-    const passwordHash = await bcrypt.hash(nanoid(), 10)
-
-    user = await User.create({
-      email: normalizedEmail,
-      passwordHash,
-      name: givenName || 'Google User',
-      userAvatar: picture || '',
+    const password = await bcrypt.hash(shortid.generate(), 10)
+    const newUser = await User.create({
+      email: email,
+      passwordHash: password,
+      username: given_name,
+      userAvatar: picture,
+      dateCreate: today,
+      referer: req.session.referer,
     })
-
-    return done(null, user)
+    return done(null, newUser)
   } catch (error) {
-    return done(error, false)
+    done(error, false)
   }
 }
 
-passport.use('google', new Strategy(googleParams, googleCallback))
+const googleStrategy = new Strategy(googleParams, googleCallback)
+passport.use('google', googleStrategy)
 
 module.exports = passport
