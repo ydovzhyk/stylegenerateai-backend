@@ -10,6 +10,10 @@ const sendPasswordResetEmail = require('../helpers/sendPasswordResetEmail')
 const isProd =
   process.env.NODE_ENV === 'production' || Boolean(process.env.DYNO)
 
+  const FRONTEND_URL = (
+    process.env.FRONTEND_URL || 'https://style-generate-ai.vercel.app'
+  ).trim()
+
 const COOKIE_BASE = {
   httpOnly: true,
   secure: isProd,
@@ -248,15 +252,10 @@ const deleteUserController = async (req, res, next) => {
 // GOOGLE AUTH
 const googleAuthController = async (req, res, next) => {
   try {
-    console.log('Callback session ID:', req.sessionID)
-    console.log('Callback session:', req.session)
-
-    const origin = req.session?.origin
+    const origin = req.session?.origin || FRONTEND_URL
 
     const { accessToken, refreshToken } = signTokens(req.user._id)
     setAuthCookies(res, { accessToken, refreshToken })
-
-    console.log('Origin used for redirect:', origin)
 
     return res.redirect(origin)
   } catch (error) {
