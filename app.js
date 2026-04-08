@@ -9,7 +9,7 @@ const authRoutes = require('./src/routes/auth.routes')
 const visitorRoutes = require('./src/routes/visitor.routes')
 const googleRoutes = require('./src/routes/google.routes')
 
-const { GOOGLE_CLIENT_SECRET } = process.env
+const { GOOGLE_CLIENT_SECRET, FRONTEND_URL } = process.env
 const isProd =
   process.env.NODE_ENV === 'production' || Boolean(process.env.DYNO)
 
@@ -19,10 +19,7 @@ const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 app.use(logger(formatsLogger))
 
 /** CORS **/
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://style-generate-ai.vercel.app',
-].filter(Boolean)
+const allowedOrigins = ['http://localhost:3000', FRONTEND_URL].filter(Boolean)
 
 const corsOptions = {
   origin: (origin, cb) => {
@@ -56,7 +53,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: isProd,
-      sameSite: 'lax',
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: 10 * 60 * 1000,
     },
   }),
