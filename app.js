@@ -9,8 +9,12 @@ const authRoutes = require('./src/routes/auth.routes')
 const visitorRoutes = require('./src/routes/visitor.routes')
 const googleRoutes = require('./src/routes/google.routes')
 
-const { GOOGLE_CLIENT_SECRET, NODE_ENV } = process.env
-console.log('NODE_ENV:', NODE_ENV)
+const { GOOGLE_CLIENT_SECRET } = process.env
+const isProd =
+  process.env.NODE_ENV === 'production' || Boolean(process.env.DYNO)
+console.log('NODE_ENV:', process.env.NODE_ENV)
+console.log('isProd:', isProd)
+console.log('GOOGLE_CLIENT_SECRET set:', Boolean(GOOGLE_CLIENT_SECRET))
 
 const app = express()
 
@@ -54,7 +58,7 @@ app.use(
     proxy: true,
     cookie: {
       httpOnly: true,
-      secure: NODE_ENV === 'production',
+      secure: isProd,
       sameSite: 'lax',
       maxAge: 10 * 60 * 1000,
     },
