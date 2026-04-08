@@ -249,11 +249,8 @@ const googleAuthController = async (req, res, next) => {
   try {
     console.log('Callback session ID:', req.sessionID)
     console.log('Callback session:', req.session)
-    console.log('NODE_ENV:', process.env.NODE_ENV)
-    console.log('FRONTEND_URL:', process.env.FRONTEND_URL)
 
-    const origin =
-      req.session?.origin || process.env.FRONTEND_URL || 'http://localhost:3000'
+    const origin = req.session?.origin
 
     const { accessToken, refreshToken } = signTokens(req.user._id)
     setAuthCookies(res, { accessToken, refreshToken })

@@ -10,6 +10,7 @@ const visitorRoutes = require('./src/routes/visitor.routes')
 const googleRoutes = require('./src/routes/google.routes')
 
 const { GOOGLE_CLIENT_SECRET, NODE_ENV } = process.env
+console.log('NODE_ENV:', NODE_ENV)
 
 const app = express()
 
@@ -42,6 +43,8 @@ app.use('/api/auth', authRoutes)
 app.use('/api/visitor', visitorRoutes)
 
 /** Google OAuth only **/
+app.set('trust proxy', 1)
+
 app.use(
   '/api/google',
   session({
