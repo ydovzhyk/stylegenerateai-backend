@@ -2,10 +2,11 @@ const nodemailer = require('nodemailer')
 
 const EMAIL_ADDRESS = String(process.env.EMAIL_ADDRESS || '').trim()
 const GMAIL_PASSKEY = String(process.env.GMAIL_PASSKEY || '').trim()
+const isProd =
+  process.env.NODE_ENV === 'production' || Boolean(process.env.DYNO)
+
 const FRONTEND_URL = String(
-  process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL
-    : 'http://localhost:3000',
+  isProd ? process.env.FRONTEND_URL : 'http://localhost:3000',
 ).trim()
 
 const logoUrl =

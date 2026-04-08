@@ -12,9 +12,6 @@ const googleRoutes = require('./src/routes/google.routes')
 const { GOOGLE_CLIENT_SECRET } = process.env
 const isProd =
   process.env.NODE_ENV === 'production' || Boolean(process.env.DYNO)
-console.log('NODE_ENV:', process.env.NODE_ENV)
-console.log('isProd:', isProd)
-console.log('GOOGLE_CLIENT_SECRET set:', Boolean(GOOGLE_CLIENT_SECRET))
 
 const app = express()
 
@@ -77,7 +74,7 @@ app.use('/api', (req, res) => {
     path: req.originalUrl,
   }
 
-  if (NODE_ENV !== 'production') {
+  if (!isProd) {
     payload.query = req.query
   }
 
@@ -92,7 +89,7 @@ app.use((err, req, res, next) => {
     message: err.message || 'Server error',
   }
 
-  if (NODE_ENV !== 'production') {
+  if (!isProd) {
     response.stack = err.stack
   }
 

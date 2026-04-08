@@ -7,10 +7,12 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL_HEROKU } = process.env
 
 const { User } = require('../models/user.model')
 
-const callbackURL =
-  process.env.NODE_ENV === 'production'
-    ? `${BASE_URL_HEROKU}/api/google/callback`
-    : 'http://localhost:4000/api/google/callback'
+const isProd =
+  process.env.NODE_ENV === 'production' || Boolean(process.env.DYNO)
+
+const callbackURL = isProd
+  ? `${BASE_URL_HEROKU}/api/google/callback`
+  : 'http://localhost:4000/api/google/callback'
 
 const googleParams = {
   clientID: GOOGLE_CLIENT_ID,
