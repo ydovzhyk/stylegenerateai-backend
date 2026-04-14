@@ -1,11 +1,11 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 const { User } = require('../models/user.model')
-const { SECRET_KEY, REFRESH_SECRET_KEY } = process.env
 const RequestError = require('../helpers/RequestError')
 const { saveUserAvatar } = require('../helpers/saveUserAvatar')
-const crypto = require('crypto')
 const sendPasswordResetEmail = require('../helpers/sendPasswordResetEmail')
+const { SECRET_KEY, REFRESH_SECRET_KEY } = process.env
 
 const isProd =
   process.env.NODE_ENV === 'production' || Boolean(process.env.DYNO)

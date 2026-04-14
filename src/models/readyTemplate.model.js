@@ -40,6 +40,26 @@ const ReadyTemplateSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    previewSourceKey: {
+      type: String,
+      trim: true,
+      default: '',
+      enum: [
+        '',
+        'man_front_color',
+        'man_front_black',
+        'man_profile_color',
+        'man_profile_black',
+        'woman_front_color',
+        'woman_front_black',
+        'woman_profile_color',
+        'woman_profile_black',
+      ],
+    },
+    useInCreateYourLook: {
+      type: Boolean,
+      default: false,
+    },
     basePrompt: {
       type: String,
       required: true,
@@ -72,9 +92,56 @@ const createReadyTemplateSchema = Joi.object({
     Joi.boolean(),
     Joi.string().valid('true', 'false'),
   ),
+  previewSourceKey: Joi.string()
+    .valid(
+      '',
+      'man_front_color',
+      'man_front_black',
+      'man_profile_color',
+      'man_profile_black',
+      'woman_front_color',
+      'woman_front_black',
+      'woman_profile_color',
+      'woman_profile_black',
+    )
+    .optional(),
+
+  useInCreateYourLook: Joi.alternatives().try(
+    Joi.boolean(),
+    Joi.string().valid('true', 'false'),
+  ),
+})
+
+const generateReadyTemplatePreviewSchema = Joi.object({
+  prompt: Joi.string().trim().min(5).max(5000).required(),
+  sourceMode: Joi.string().valid('prototype', 'upload').optional(),
+  prototypeGender: Joi.string().valid('man', 'woman').optional(),
+  prototypeView: Joi.string().valid('front', 'profile').optional(),
+  prototypeTone: Joi.string().valid('color', 'black').optional(),
+  outputId: Joi.string()
+    .valid('portrait_2_3', 'square_1_1', 'landscape_3_2')
+    .required(),
+  photoQualityId: Joi.string()
+    .valid('draft', 'standard', 'premium', 'print')
+    .default('standard'),
+})
+
+const autogenerateReadyTemplatesSchema = Joi.object({
+  perCategory: Joi.number()
+    .integer()
+    .min(1)
+    .max(20)
+    .default(2),
+  limitCategories: Joi.number().integer().min(1).max(100).optional(),
+  categories: Joi.array().items(Joi.string().trim().min(2).max(50)).optional(),
+  dryRun: Joi.alternatives()
+    .try(Joi.boolean(), Joi.string().valid('true', 'false'))
+    .default(false),
 })
 
 module.exports = {
   ReadyTemplate,
   createReadyTemplateSchema,
+  generateReadyTemplatePreviewSchema,
+  autogenerateReadyTemplatesSchema,
 }

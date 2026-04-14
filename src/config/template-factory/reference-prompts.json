@@ -1,0 +1,507 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-14",
+  "notes": "Reference prompts for AI template draft generation",
+  "items": [
+    {
+      "id": "ref_001",
+      "title": "Fiery Bandaged Fighter",
+      "category": "Dark Fantasy",
+      "tags": ["fighter", "portrait", "cinematic", "fire", "intense"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic cinematic portrait of a battle-worn man with an intense expression, short styled hair, and sharp facial features. His face is bruised, bloodied, and covered with fresh cuts and dirt. He holds a glowing fiery fist near his mouth, with a hand wrapped in textured combat bandages emitting lava-like cracks and orange flames. Sparks fly in the air. Dramatic lighting with high contrast, detailed skin texture, sweat and grit, dark minimal background, shallow depth of field, hyper-detailed, volumetric lighting, intense mood, action movie poster style.",
+      "styleNotes": "Explosive masculine action portrait with glowing fire accents, dramatic contrast, and strong cinematic poster energy."
+    },
+    {
+      "id": "ref_002",
+      "title": "Lemon Soda Campaign Girl",
+      "category": "Commercial Advertising",
+      "tags": ["woman", "commercial", "product", "summer", "vibrant"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A stylish young woman poses in a fresh commercial beverage advertisement scene, holding a glass of ice-cold lemon soda with a lime slice garnish. She wears a white crop top, neon green athletic shorts, white sneakers, and a transparent jacket with neon accents. She smiles confidently in a relaxed pose while leaning on a giant soda can covered with water droplets, surrounded by ice cubes. The background is a smooth gradient of mint green and teal, creating a refreshing summer vibe. Studio lighting, soft shadows, ultra-realistic skin texture, high detail, product advertising style, vibrant colors, crisp focus, professional commercial photography.",
+      "styleNotes": "Bright commercial campaign aesthetic with clean studio light, product focus, and energetic summer color palette."
+    },
+    {
+      "id": "ref_003",
+      "title": "Man of Fire and Fragments",
+      "category": "Dark Fantasy",
+      "tags": ["man", "transformation", "fire", "cinematic", "epic"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A hyper-realistic cinematic scene of a man transforming into a fiery entity. His body breaks apart into burning fragments and flying debris, with glowing molten cracks spreading across his skin. Intense flames erupt from his chest and shoulder. His expression is full of pain and power. A dramatic explosion effect and shattered particles are frozen mid-air. The background features a dark stormy sky with heavy clouds, while orange fire contrasts with cool blue tones. Ultra-detailed textures, dynamic motion blur, volumetric lighting, epic composition, sharp focus, dramatic shadows, and high contrast.",
+      "styleNotes": "Transformation-driven cinematic fantasy with violent energy, debris, and fiery body effects."
+    },
+    {
+      "id": "ref_004",
+      "title": "Molten Lava Woman",
+      "category": "Dark Fantasy",
+      "tags": ["woman", "lava", "transformation", "cinematic", "dramatic"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A cinematic portrait of a woman transforming into molten lava, her body partially covered in cracked volcanic rock with glowing orange magma veins running through her skin. Her head is slightly bowed, eyes closed, conveying a calm yet powerful emotion. The cracks emit bright fiery light, creating dramatic contrast against the dark ash-like texture of her body. Her hair is styled in a loose bun, slightly charred at the edges. She wears a delicate partially burned dress blending fabric with earth textures. Soft depth of field with a blurred urban background and warm bokeh lights. Ultra-realistic, hyper-detailed skin texture, dramatic lighting, shallow depth of field, cinematic color grading, fantasy realism, high contrast, volumetric lighting.",
+      "styleNotes": "Elegant feminine lava transformation with calm emotion, detailed cracked textures, and strong warm contrast."
+    },
+    {
+      "id": "ref_005",
+      "title": "Halo of Ash and Light",
+      "category": "Dark Fantasy",
+      "tags": ["man", "halo", "embers", "cinematic", "moody"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A cinematic dark fantasy scene of a young man standing alone on rocky, desolate ground beneath a stormy sky filled with dramatic clouds. Behind him, a glowing circular ring of fire and light forms a perfect halo, radiating intense golden energy. He stands slightly bowed, looking down with a calm yet emotional expression. His body is partially disintegrating into smoke, ash, and glowing embers drifting into the air, blending into the environment. Sparks and particles scatter around him, creating a surreal transformation effect. Moody lighting, high contrast, ultra-detailed textures, realistic skin tones, volumetric fog, depth of field, cinematic color grading, and an epic atmosphere.",
+      "styleNotes": "Strong symbolic fantasy composition with halo light, ash disintegration, and spiritual transformation mood."
+    },
+    {
+      "id": "ref_006",
+      "title": "Tattooed Streetwear Bald Man",
+      "category": "Street Style",
+      "tags": ["man", "streetwear", "tattoos", "urban", "illustration"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A stylish bald man with a thick beard and detailed neck tattoos wears black sunglasses and a dark streetwear jacket, looking slightly upward with a confident attitude. The background is minimalist off-white with artistic ink splashes and paint drips. Modern urban illustration style, semi-realistic digital painting, sharp facial details, high contrast lighting, soft shadows, grunge texture effects, clean composition, poster design aesthetic, ultra-detailed.",
+      "styleNotes": "Urban poster-like portrait mixing fashion attitude, graphic grunge accents, and semi-realistic illustration."
+    },
+    {
+      "id": "ref_007",
+      "title": "Teal Energy Cyber Woman",
+      "category": "Cyberpunk",
+      "tags": ["woman", "cyberpunk", "neon", "energy", "futuristic"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A futuristic neon portrait of a beautiful young woman with glowing teal light lines forming her face and body. Intricate flowing energy strands replace her hair. Highly detailed skin texture, soft yet intense gaze, cinematic lighting, dark moody background, cyberpunk aesthetic, ultra-realistic, volumetric lighting, depth of field, sharp focus, digital art, sci-fi concept, bioluminescent effect, ethereal glow, elegant composition.",
+      "styleNotes": "Elegant cyber-feminine portrait with luminous face lines, energy hair, and cool teal sci-fi mood."
+    },
+    {
+      "id": "ref_008",
+      "title": "Desert Face Double Exposure",
+      "category": "Double Exposure",
+      "tags": ["man", "double exposure", "desert", "surreal", "cinematic"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "Surreal double exposure portrait of a human face blended with a vast desert landscape. A lone man walks along a winding path through sand dunes under dramatic golden sunset lighting. Stormy clouds form around the face, while hyper-detailed skin texture merges into sand. Emotional and cinematic atmosphere, soft volumetric light rays, ultra-realistic, sharp focus, depth of field, fantasy concept art, warm tones, moody shadows, and epic composition.",
+      "styleNotes": "Strong surreal composition blending portrait form with environmental storytelling and warm desert atmosphere."
+    },
+    {
+      "id": "ref_009",
+      "title": "Blueprint Architect Mind",
+      "category": "Abstract Graphic Design",
+      "tags": ["man", "blueprint", "abstract", "graphic", "poster"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A hyper-detailed modern portrait of a thoughtful bearded man looking slightly upward, created in a fusion of architectural blueprint and abstract graphic design style. The face is composed of intricate technical linework, schematics, and geometric patterns resembling engineering drawings. Use bold color blocking with yellow on the left side, red and blue on the right, and grayscale tones blending across the face. The background is minimal with faint technical diagrams, grid lines, and blueprint elements. Ultra-sharp focus, high contrast, clean vector and ink illustration style, futuristic and artistic, dramatic lighting, highly textured details, poster design aesthetic.",
+      "styleNotes": "Graphic poster portrait built from technical lines, color blocks, and intelligent design language."
+    },
+    {
+      "id": "ref_010",
+      "title": "Tribal Woman Dust Walk",
+      "category": "Surreal",
+      "tags": ["woman", "tribal", "dust", "transformation", "cinematic"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A hyper-realistic cinematic portrait of a tribal woman walking forward with a wooden stick, wearing traditional textured cloth and a headwrap in earthy orange tones. Her body is partially dissolving into fine dust particles flowing backward like sand blown by the wind. The disintegration effect is highly detailed, with dynamic motion and particles scattering smoothly into the background. Dramatic studio lighting, soft shadows, neutral gradient background, ultra-detailed skin texture, wrinkles, and fabric realism. The composition captures motion and emotion, symbolizing time, struggle, and transformation. Sharp focus, depth of field, volumetric dust, and cinematic color grading.",
+      "styleNotes": "Cultural portrait with emotional symbolism, dust disintegration, earthy tones, and elegant motion."
+    },
+    {
+      "id": "ref_011",
+      "title": "Oil Palette Knife Man",
+      "category": "Oil Painting",
+      "tags": ["man", "oil painting", "colorful", "artistic", "portrait"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A hyper-detailed abstract portrait of a man created entirely with thick palette knife oil paint strokes. His face is textured with vibrant multicolored paint, intense blue eyes, a rugged beard, and expressive messy painted hair flowing like waves. The background is an ocean of layered blue brush textures with colorful splashes of pink, yellow, orange, cyan, and purple. Impasto painting style, ultra-realistic artistic composition, dramatic lighting, fine facial details, emotional expression, contemporary modern art, museum-quality look, highly textured acrylic and oil paint effect, surreal painterly portrait, cinematic composition.",
+      "styleNotes": "Painterly masculine portrait with sculpted impasto textures and contemporary gallery-art energy."
+    },
+    {
+      "id": "ref_012",
+      "title": "Patchwork Tribal Side Profile",
+      "category": "Surreal",
+      "tags": ["woman", "side profile", "tribal", "paint", "dramatic"],
+      "previewSourceKey": "woman_profile_color",
+      "useAsReference": true,
+      "prompt": "A hyper-realistic cinematic side-profile portrait of a human face covered in abstract tribal patchwork body paint. Bold red, blue, yellow, and beige colors with cracked paint texture, ancient symbols, runes, letters, and graphic markings are embedded into the skin like cultural tattoos. An intense sharp amber eye glows under dramatic lighting. Ultra-detailed skin pores, wrinkles, and paint texture. Braided hair wrapped with fabric and beads, dark black background, moody studio lighting, shallow depth of field, ultra-sharp focus, photorealistic, surreal art style, cultural fusion, powerful emotion, cinematic color grading.",
+      "styleNotes": "Side-profile symbolic portrait with ritual body paint, strong color geometry, and cultural-fusion mood."
+    },
+    {
+      "id": "ref_013",
+      "title": "Cyber Veins Studio Athlete",
+      "category": "Sci-Fi Character",
+      "tags": ["man", "studio", "cybernetic", "editorial", "futuristic"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A cinematic studio portrait of a muscular young man sitting on geometric blocks, wearing a white sleeveless tank top, black jogger pants, and clean white sneakers. His body features glowing abstract vein-like patterns, giving him a futuristic cybernetic look. He looks down with a serious introspective expression. The scene is lit with dramatic red and soft white lighting, creating strong contrast against a dark gradient background. Minimalist composition, high fashion editorial style, ultra-detailed skin texture, sharp focus, soft shadows, moody atmosphere, professional photography, volumetric lighting, photorealistic.",
+      "styleNotes": "Minimal studio fashion portrait with futuristic body detail and clean editorial composition."
+    },
+    {
+      "id": "ref_014",
+      "title": "Cybernetic Bald Warrior",
+      "category": "Android / Robot",
+      "tags": ["man", "cybernetic", "robotic", "warrior", "poster"],
+      "previewSourceKey": "man_profile_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic cinematic portrait of a bald muscular man with sunglasses, designed as a futuristic cybernetic warrior in a side-profile pose. He has an intense serious expression and a metallic robotic helmet fused with his head, with exposed mechanical details, wires, and steel parts around the neck and shoulder. A detailed tribal tattoo covers his muscular arm. He wears a fitted white tank top while dramatic smoke and mist dissolve around his upper body. Soft white foggy background, high contrast lighting, glossy skin texture, battle scars on the face, sci-fi action movie poster style, hyper-detailed, photorealistic, sharp focus, premium poster composition, volumetric smoke, silver and gunmetal mechanical textures.",
+      "styleNotes": "Premium sci-fi poster portrait combining luxury studio polish with aggressive cyber-mechanical details."
+    },
+    {
+      "id": "ref_015",
+      "title": "Black-and-White Raven Field",
+      "category": "Black & White Portrait",
+      "tags": ["man", "black and white", "gothic", "ravens", "moody"],
+      "previewSourceKey": "man_front_black",
+      "useAsReference": true,
+      "prompt": "A cinematic black-and-white portrait of a young man standing alone in an open field under a dramatic cloudy sky, surrounded by flying crows and ravens. He wears a long dark overcoat with his hands in his pockets. His slightly curly hair and calm mysterious expression face away from the camera. Moody gothic atmosphere, dark fashion editorial style, high contrast lighting, soft wind movement in the coat, birds flying close to the lens, dramatic composition, minimal background, emotional and haunting vibe, ultra-realistic, sharp facial details, shallow depth of field, fine texture, cinematic shadows, luxury magazine photography.",
+      "styleNotes": "Monochrome gothic editorial scene with emotional isolation, birds, and strong open-field atmosphere."
+    },
+    {
+      "id": "ref_016",
+      "title": "Top-Down Gen Z Fashion",
+      "category": "High-End Fashion",
+      "tags": ["woman", "fashion", "editorial", "colorful", "studio"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A vibrant high-fashion editorial portrait of a stylish young woman sitting on a bright blue studio floor, captured from a dramatic top-down perspective. She wears oversized pink geometric sunglasses, a vivid green cropped blazer, a pink pleated outfit with a bow-tie collar, and colorful trendy sneakers. Her pose is artistic and playful, with one leg folded and one stretched forward as she looks upward with a dreamy expression. Strong studio lighting creates bold shadows and high contrast. The background is minimal, clean, and solid cyan-blue, making the colorful outfit pop. Ultra-detailed skin texture, glossy fashion magazine aesthetic, cinematic composition, editorial styling, sharp focus, vibrant saturated colors, and premium studio photography.",
+      "styleNotes": "Playful fashion editorial with dramatic angle, highly saturated styling, and Gen Z campaign energy."
+    },
+    {
+      "id": "ref_017",
+      "title": "City Crossing Fashion Walk",
+      "category": "Street Style",
+      "tags": ["woman", "city", "fashion", "editorial", "rainy"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A stunning fashionable young woman walks confidently through a busy city street crossing, wearing an oversized burnt-orange blazer over a short black dress, black high heels, and holding a small black handbag. Her long wavy brown hair flows naturally as she makes intense cinematic eye contact. Urban fashion editorial style, shallow depth of field, blurred crowd in the foreground and background, soft moody lighting, rainy city atmosphere, neon bokeh lights, dramatic street photography, luxury magazine look, realistic skin texture, elegant pose, full-body shot, centered composition, high detail, cinematic color grading, and a Times Square-inspired background.",
+      "styleNotes": "Premium street-fashion editorial with urban motion, cinematic rain mood, and strong female confidence."
+    },
+    {
+      "id": "ref_018",
+      "title": "Newspaper Collage Thinker",
+      "category": "Abstract Graphic Design",
+      "tags": ["man", "mixed media", "collage", "editorial", "artistic"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A hyper-detailed digital painting portrait of a man with a thoughtful expression, resting his face on his hand in a close-up composition. The artwork blends realism with painterly brush strokes and collage elements. His face is partially overlaid with vintage newspaper textures, headlines, and typography integrated into the skin. Warm tones dominate one side of the face, while cooler desaturated tones dominate the other, creating a split-tone effect. Strong emphasis on expressive eyes, detailed skin texture, and subtle facial hair. Artistic mixed-media style combining portrait painting and graphic design, with high contrast lighting, cinematic feel, and sharp focus.",
+      "styleNotes": "Editorial mixed-media portrait with typography overlays and strong warm-cool split design."
+    },
+    {
+      "id": "ref_019",
+      "title": "Battle-Worn Hooded Warrior",
+      "category": "Dark Fantasy",
+      "tags": ["warrior", "portrait", "cinematic", "dark", "fantasy"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A hyper-realistic cinematic close-up portrait of a rugged, battle-worn man wearing a tattered hooded cloak. His face is dirty, cracked, and weathered, with visible scars and rough skin texture. One piercing blue eye is sharply visible under the shadow of the hood, glowing slightly with intensity. His beard is unkempt and dusty, and his expression is grim, hardened, and determined. The fabric of the hood is frayed and detailed, with realistic threads and wear. Dark, moody lighting with cold blue tones, high contrast, shallow depth of field, ultra-detailed skin texture, dramatic shadows, post-apocalyptic or medieval fantasy atmosphere, cinematic color grading.",
+      "styleNotes": "Dark, gritty, masculine close-up fantasy portrait with strong atmosphere and rugged texture detail."
+    },
+    {
+      "id": "ref_020",
+      "title": "Cartoon Studio Selfie",
+      "category": "Cartoon Style",
+      "tags": ["man", "selfie", "cartoon", "studio", "playful"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A cheerful young man takes a selfie in a professional photography studio, surrounded by classic cartoon characters. He has short dark hair, a trimmed beard, and wears a light pink T-shirt, smiling directly at the camera with his arms extended holding the phone. Around him are animated characters, while studio lighting equipment, softboxes, and cables are visible in the background. Bright high-quality lighting, shallow depth of field, ultra-detailed, photorealistic human subject combined with stylized cartoon characters, and vibrant colors.",
+      "styleNotes": "Playful crossover prompt combining a realistic human selfie setup with colorful animated character energy."
+    },
+    {
+      "id": "ref_021",
+      "title": "Night Street Noir Walker",
+      "category": "Black & White Portrait",
+      "tags": ["man", "black and white", "city", "noir", "cinematic"],
+      "previewSourceKey": "man_front_black",
+      "useAsReference": true,
+      "prompt": "Black-and-white cinematic portrait of a young man walking through a busy city street at night. He stands sharply in focus while the crowd around him is blurred with dynamic motion, creating a dramatic sense of isolation and introspection. Soft urban lights glow in the background, forming abstract bokeh streaks. His expression is intense and thoughtful, his hair slightly tousled, and he wears a dark coat over a partially unbuttoned shirt. High-contrast lighting, moody atmosphere, shallow depth of field, dramatic blur, film-noir aesthetic, ultra-realistic, and poster-style composition.",
+      "styleNotes": "Urban noir portrait built around emotional isolation, motion blur, and monochrome cinematic mood."
+    },
+    {
+      "id": "ref_022",
+      "title": "Icy Blue Neon Beauty",
+      "category": "Beauty Portrait",
+      "tags": ["woman", "beauty", "neon", "close-up", "editorial"],
+      "previewSourceKey": "woman_profile_color",
+      "useAsReference": true,
+      "prompt": "Ultra close-up cinematic portrait of a mysterious beautiful young woman in side profile, with glowing icy blue eyes, wet black hair strands falling across her face, glossy natural lips, and flawless pale skin covered with tiny sparkling water droplets and glitter reflections. Dramatic blue neon lighting, moody dark background, dreamy bokeh lights, hyper-detailed skin texture, realistic eyelashes, soft shadows, emotional expression, futuristic ethereal atmosphere, shallow depth of field, extreme facial detail, photorealistic, cinematic color grading, and luxury fashion editorial style.",
+      "styleNotes": "Premium beauty close-up with wet texture, blue neon mood, and elegant futuristic editorial feeling."
+    },
+    {
+      "id": "ref_023",
+      "title": "Formula Face Thinker",
+      "category": "Abstract Graphic Design",
+      "tags": ["woman", "side profile", "science", "editorial", "surreal"],
+      "previewSourceKey": "woman_profile_color",
+      "useAsReference": true,
+      "prompt": "Extreme close-up side-profile portrait of a young woman with hyper-realistic skin texture and visible pores, dewy glowing skin, and an intensely detailed eye reflection. Slightly wet strands of hair fall across her face. Dramatic cinematic lighting comes from the front-left, with deep shadows on the back side and a dark black background. Mathematical equations and scientific formulas are projected across her face and skin, creating a futuristic intellectual mood. Emotional expression of deep thinking and curiosity, ultra-detailed eyelashes, glossy lips, sharp nose profile, volumetric light, moody contrast, orange and teal cinematic tones, shallow depth of field, photorealistic, studio quality, dramatic composition, editorial poster style.",
+      "styleNotes": "Intellectual futuristic portrait mixing scientific projection overlays with luxurious close-up beauty photography."
+    },
+    {
+      "id": "ref_024",
+      "title": "Bioluminescent Blue Alien",
+      "category": "Sci-Fi Character",
+      "tags": ["alien", "sci-fi", "glowing", "portrait", "fantasy"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-detailed cinematic close-up portrait of a mystical blue alien humanoid face inspired by fantasy sci-fi worlds. The skin features glowing bioluminescent patterns with teal, cyan, and golden speckles, hyper-realistic textures, and sharp facial features. One intense green eye with a highly detailed iris is in sharp focus. Soft subsurface scattering, dark black background, dramatic lighting, high contrast, shallow depth of field, photorealistic, cinematic color grading, intricate skin details, glowing particles across the face, and a moody atmosphere.",
+      "styleNotes": "Stylized alien close-up with premium glowing skin details and elegant photoreal sci-fi fantasy treatment."
+    },
+    {
+      "id": "ref_025",
+      "title": "Nature Girl Double Exposure",
+      "category": "Double Exposure",
+      "tags": ["girl", "nature", "double exposure", "surreal", "soft"],
+      "previewSourceKey": "woman_profile_color",
+      "useAsReference": true,
+      "prompt": "A dreamy double-exposure portrait of a young girl in side profile wearing a soft blue bucket hat and a delicate embroidered dress. Her silhouette blends seamlessly with lush green trees, branches, and tiny glowing flowers, creating a nature-infused composition. Butterflies gently flutter around her, adding a magical and serene atmosphere. Soft natural lighting, pastel tones, and a clean white background enhance the ethereal mood. Ultra-detailed, cinematic composition, shallow depth of field, soft shadows, photorealistic skin texture, and artistic surrealism.",
+      "styleNotes": "Soft nature-surreal double exposure with youthful innocence, butterflies, and luminous botanical storytelling."
+    },
+    {
+      "id": "ref_026",
+      "title": "Golden Freckled Glow",
+      "category": "Beauty Portrait",
+      "tags": ["woman", "beauty", "golden hour", "freckles", "close-up"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic close-up portrait of a stunning woman with glowing green-yellow eyes, wet freckles, and micro-gold dust shimmering on her skin. Sunlight creates dramatic golden streaks across her face, illuminating water droplets and loose wet hair strands. Hyper-detailed skin texture, glossy lips, cinematic depth of field, warm golden-hour lighting, dreamy bokeh in the background, high contrast, photorealistic, sharp focus, and a moody ethereal atmosphere.",
+      "styleNotes": "Warm premium beauty portrait with freckles, water detail, and glowing golden-hour elegance."
+    },
+    {
+      "id": "ref_027",
+      "title": "Forest Rider Double Exposure",
+      "category": "Double Exposure",
+      "tags": ["woman", "double exposure", "forest", "sunset", "nostalgic"],
+      "previewSourceKey": "woman_profile_color",
+      "useAsReference": true,
+      "prompt": "A dreamy double-exposure portrait of a young woman in profile in soft grayscale tones, blended with a golden sunset forest scene. Inside her silhouette, a rider on a horse moves slowly through tall trees while warm sunlight rays filter through leaves in glowing orange and amber hues. Emotional nostalgic mood, fine art photography style, soft light, shallow depth of field, ultra-detailed, surreal composition, smooth blending, cinematic lighting, and dramatic contrast.",
+      "styleNotes": "Nostalgic fine-art double exposure with warm forest light and poetic rider storytelling."
+    },
+    {
+      "id": "ref_028",
+      "title": "Curly Hair Paint Fusion",
+      "category": "Oil Painting",
+      "tags": ["man", "oil painting", "abstract", "colorful", "portrait"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A hyper-realistic abstract portrait of a young man with curly hair, created using thick expressive oil paint strokes. The face is partially realistic and partially blended with vibrant paint textures in shades of blue, orange, yellow, red, and white. The paint appears sculpted and layered, with dynamic swirls and flowing brush strokes extending from the hair and neck, creating a fluid almost melting effect. The skin transitions seamlessly into colorful paint, forming a surreal fusion of human and paint. Soft studio lighting, clean white background, ultra-detailed, sharp focus, modern digital art, cinematic composition.",
+      "styleNotes": "Expressive painted portrait where realism melts into color-heavy impasto abstraction."
+    },
+    {
+      "id": "ref_029",
+      "title": "Soccer Hero Poster",
+      "category": "Sports Poster",
+      "tags": ["sports", "football", "poster", "dynamic", "advertising"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A dynamic sports poster of a professional football player mid-air performing a powerful kick, seen from a slightly low angle. He wears a teal-blue jersey with the name and number visible on the back. His body twists in motion, with one leg extended toward a soccer ball on the ground while dramatic golden motion trails swirl around him. The background is a clean dark teal gradient, minimal and cinematic. Studio-like dramatic lighting highlights muscle definition and movement. Dust particles and debris rise subtly from the ground near the ball. The composition is centered and highly stylized, with a modern sports advertisement aesthetic, sharp focus, and controlled motion blur.",
+      "styleNotes": "Energetic premium sports-ad composition built around motion trails, athletic pose, and poster-like clarity."
+    },
+    {
+      "id": "ref_030",
+      "title": "Freedom Particle Walker",
+      "category": "Surreal",
+      "tags": ["woman", "double exposure", "particles", "environmental", "freedom"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A surreal cinematic photo of a young woman walking forward with her eyes closed and face lifted toward the sky. She wears an orange jacket, grey hoodie, camouflage cargo pants, and sneakers. Her body is partially dissolving into flying fragments and particles that transform into a landscape scene with wind turbines, an industrial tower, and autumn trees. A white dove flies beside her, symbolizing freedom. Dramatic particle dispersion effect, double-exposure style, environmental concept art, minimal light grey background, ultra-detailed, cinematic lighting, modern poster design, depth, motion, and photorealistic realism.",
+      "styleNotes": "Conceptual surreal portrait connecting body fragmentation with environmental storytelling and symbolic freedom."
+    },
+    {
+      "id": "ref_031",
+      "title": "Winter Cloak Double Exposure",
+      "category": "Double Exposure",
+      "tags": ["woman", "winter", "double exposure", "hooded", "fantasy"],
+      "previewSourceKey": "woman_profile_color",
+      "useAsReference": true,
+      "prompt": "Double-exposure portrait of a young woman in side profile wearing a hooded cloak. Inside the silhouette lies a mystical winter landscape with a snowy forest, frozen river, and a small waterfall flowing through the scene. Soft blue and teal tones, foggy atmosphere, cinematic lighting, ultra-detailed, surreal fantasy style, smooth skin, delicate facial features, realistic textures, dreamy mood, photorealistic, artistic double-exposure composition, and a dark minimal background.",
+      "styleNotes": "Mystical winter-surreal female profile with elegant cold palette and internal fantasy landscape."
+    },
+    {
+      "id": "ref_032",
+      "title": "Thunder God Blueprint Warrior",
+      "category": "Comic Book",
+      "tags": ["warrior", "norse", "comic", "blueprint", "epic"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-detailed cinematic illustration of a powerful Norse thunder god warrior holding a massive engraved hammer. He has long silver hair and beard, wearing highly detailed metallic armor with circular chest plates and a flowing red cape. The warrior stands on broken stone ruins with one foot raised on a rock, looking down at the hammer with a serious heroic expression. Lightning energy cracks around his armor and the ground. The background is a white minimal canvas filled with futuristic technical blueprints, mechanical diagrams, architectural lines, and schematic sketches surrounding the character. Highly detailed line art mixed with realistic textures, concept art style, comic-book illustration, sharp ink outlines, dramatic lighting, epic fantasy atmosphere, poster design, centered composition, and clean white background.",
+      "styleNotes": "Hybrid comic-concept art prompt blending heroic fantasy with technical blueprint graphic language."
+    },
+    {
+      "id": "ref_033",
+      "title": "Golden Hour City Walker",
+      "category": "Street Style",
+      "tags": ["man", "city", "golden hour", "fashion", "cinematic"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic cinematic scene of a modern city street at sunset. A stylish young man walks confidently in the middle of the road under golden-hour lighting, with dramatic shadows and soft wind moving his jacket. Shallow depth of field, highly detailed professional photography, cinematic color grading, volumetric light, and sharp focus.",
+      "styleNotes": "Clean lifestyle street-fashion shot with warm sunset atmosphere and confident masculine movement."
+    },
+    {
+      "id": "ref_034",
+      "title": "Golden Light Freckled Woman",
+      "category": "Beauty Portrait",
+      "tags": ["woman", "beauty", "freckles", "golden light", "close-up"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic cinematic close-up portrait of a young woman with striking green eyes, wet glossy skin covered in water droplets, and soft freckles visible on her cheeks and nose. Natural thick eyebrows, slightly parted glossy lips, and damp hair strands fall across her face. Dramatic warm golden lighting with deep shadows, shallow depth of field, extreme facial detail, realistic skin texture and pores, moody atmosphere, emotional gaze, high contrast, photorealistic, cinematic color grading, and studio photography.",
+      "styleNotes": "Golden-lit beauty close-up with freckles, wet skin texture, and premium fashion-photography sharpness."
+    },
+    {
+      "id": "ref_035",
+      "title": "Night Graffiti Street Sit",
+      "category": "Street Style",
+      "tags": ["man", "urban", "night", "graffiti", "streetwear"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "A stylish man using the uploaded face sits on an empty city street at night under a highway overpass, leaning against a large concrete pillar covered in colorful graffiti art. The perspective is low-angle, making the sneakers in the foreground appear large and striking. He wears a white T-shirt with a bold red wordmark, dark green jogger pants, and a red flannel shirt tied around his waist. Light trails from passing cars streak across both sides of the road, creating a dynamic urban vibe. Tall modern skyscrapers with glowing windows frame the background under the night sky. The scene is cinematic, vibrant, dramatic, and filled with neon color energy and sharp details.",
+      "styleNotes": "Urban lifestyle poster scene with attitude, low-angle sneakers emphasis, and colorful graffiti-night atmosphere."
+    },
+    {
+      "id": "ref_036",
+      "title": "Beach Sunlit Smile",
+      "category": "Travel Style",
+      "tags": ["woman", "beach", "summer", "portrait", "joyful"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A beautiful young woman with natural freckles smiles brightly in portrait photography as warm golden sunlight hits her face. Soft shadows and wind move through her brown hair. She wears a light blue off-shoulder ruffled dress and a seashell necklace. Glowing skin, natural makeup, and a white-and-blue wall create a summer beach vibe. Joyful expression, ultra-realistic skin texture, shallow depth of field, soft background blur, high detail, cinematic lighting, and professional fashion photography.",
+      "styleNotes": "Warm cheerful travel-fashion portrait with authentic summer joy and soft coastal color mood."
+    },
+    {
+      "id": "ref_037",
+      "title": "Steppe Rock Woman",
+      "category": "Travel Style",
+      "tags": ["woman", "landscape", "natural", "moody", "editorial"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "Cinematic portrait of a young Asian woman sitting on a large rock in a vast open steppe landscape. Her long messy black hair blows in the wind, and she wears an oversized grey wool sweater with loose linen pants in minimalist natural styling. Behind her, a small herd of horses grazes in the grassland, with distant misty mountains beneath an overcast cloudy sky. Moody atmosphere, earthy muted colors, cinematic composition, shallow depth of field, soft natural lighting, dramatic cloudy sky, wind-swept hair, ultra-realistic photography, desaturated tones, and emotional atmospheric mood.",
+      "styleNotes": "Quiet travel-editorial portrait with open landscape, desaturated mood, and strong atmospheric storytelling."
+    },
+    {
+      "id": "ref_038",
+      "title": "Daisy Field Golden Hour",
+      "category": "Soft Aesthetic",
+      "tags": ["woman", "field", "flowers", "romantic", "golden hour"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A cinematic golden-hour portrait of a beautiful young woman standing in a vast field full of blooming white daisies. She turns back and smiles warmly at the camera, her long wavy red hair blowing in the wind. She wears a soft vintage-style floral dress that flows naturally with the breeze. The scene is captured during sunset with warm golden sunlight illuminating her face and creating soft highlights and shadows. The background shows an endless meadow of flowers with a distant tree line blurred by shallow depth of field. Dreamy romantic atmosphere, natural light, soft film tones, cinematic color grading, high detail, bokeh, professional photography, emotional storytelling, and warm summer evening mood.",
+      "styleNotes": "Romantic feminine field portrait with floral softness, warm sunset light, and emotional storytelling."
+    },
+    {
+      "id": "ref_039",
+      "title": "Half-Face Blonde Beauty",
+      "category": "Beauty Portrait",
+      "tags": ["woman", "beauty", "half face", "editorial", "soft light"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic close-up portrait of a beautiful young woman in a half-face composition, with a green eye sharply in focus, natural freckles across the nose and cheeks, soft pink lips, and blonde hair with loose strands falling over the face. Minimal makeup, cinematic soft natural side lighting, shallow depth of field, highly detailed skin texture, neutral beige background, modern fashion portrait style, black high-neck top, photorealistic, professional beauty photography, soft shadows, and editorial magazine style.",
+      "styleNotes": "Clean premium beauty crop with freckles, sharp eye focus, and polished editorial simplicity."
+    },
+    {
+      "id": "ref_040",
+      "title": "Frozen Berry Macro Eye",
+      "category": "Beauty Portrait",
+      "tags": ["woman", "macro", "eye", "winter", "beauty"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "Extreme macro cinematic portrait of a young woman's face focusing on one striking blue-green eye. Ultra-detailed skin texture with natural freckles and pores, water droplets and sparkling ice crystals scattered across her cheek and eyelashes, wet glossy lips slightly visible, and strands of damp hair falling across the face. Dramatic soft lighting highlights moisture on the skin. Red berries covered with frost and ice press beside her cheek, creating a cold winter aesthetic. Shallow depth of field, hyper-realistic photography, studio lighting, cinematic color grading, high contrast, and photorealistic detail.",
+      "styleNotes": "Luxury winter macro-beauty setup with frozen props, moisture detail, and one-eye focus."
+    },
+    {
+      "id": "ref_041",
+      "title": "Neon-Noir Platinum Woman",
+      "category": "Cyberpunk",
+      "tags": ["woman", "neon", "close-up", "editorial", "dark"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A hyper-realistic close-up portrait of a young woman with wet platinum-blonde hair partially covering her face, illuminated by dramatic blue, teal, and cyan light streaks. Her skin is glossy and reflective, with sharp highlights and deep shadows creating a moody atmospheric look. Detailed focus on expressive blue eyes, long eyelashes, and soft glossy lips. The lighting forms abstract patterns across her face, creating a mysterious underwater or neon-noir effect. Ultra-detailed skin texture, cinematic depth of field, high-contrast lighting, photorealistic, dark aesthetic, and high-resolution editorial style.",
+      "styleNotes": "Neon-noir beauty close-up with wet platinum styling, glossy skin, and moody cyber-feminine atmosphere."
+    },
+    {
+      "id": "ref_042",
+      "title": "Wildflower Profile Bloom",
+      "category": "Soft Aesthetic",
+      "tags": ["woman", "profile", "flowers", "botanical", "ethereal"],
+      "previewSourceKey": "woman_profile_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic artistic portrait of a young woman in side profile, with soft natural skin and freckles. Warm golden sunlight illuminates her face while delicate orange and yellow wildflowers organically grow and blend around her hair, ear, and neck as if nature is merging with the human form. Transparent floral textures appear around the collar area. Cinematic lighting, shallow depth of field, soft grey background, dreamy botanical aesthetic, highly detailed skin texture, fine hair strands, photorealistic, ethereal atmosphere, and editorial fashion photography.",
+      "styleNotes": "Botanical feminine profile with subtle magical realism and elegant soft-fashion energy."
+    },
+    {
+      "id": "ref_043",
+      "title": "Curly Beauty Editorial",
+      "category": "Beauty Portrait",
+      "tags": ["woman", "editorial", "natural beauty", "curly hair", "portrait"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic cinematic portrait of a young woman with light brown skin and natural freckles, striking hazel-green eyes with sharp catchlights, and full soft lips slightly parted. Her expressive gaze looks directly at the camera. Voluminous curly hair frames the face with natural texture and depth, enhanced by subtle golden highlights. She wears large gold hoop earrings and a patterned orange dress with teal accents. Shot in soft natural daylight with shallow depth of field and creamy bokeh background, warm earthy color grading, professional fashion photography, ultra-sharp focus on the eyes, detailed skin texture, realistic pores, editorial magazine style, cinematic lighting, and natural beauty aesthetic.",
+      "styleNotes": "Warm editorial beauty portrait focused on natural texture, curls, and premium earthy color styling."
+    },
+    {
+      "id": "ref_044",
+      "title": "Professional Corporate Headshot",
+      "category": "Business Portrait",
+      "tags": ["corporate", "headshot", "business", "studio", "professional"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic professional corporate headshot of a confident business professional. Head-and-shoulders portrait with sharp focus on the face, studio lighting with a soft key light from the front-right and a subtle rim light, neutral gray gradient background, impeccable tailored dark navy suit, crisp white dress shirt, subtle deep-blue tie, neat short hair, and a warm confident smile with direct eye contact. Flawless skin texture, photorealistic details such as fabric weave and skin pores, and cinematic depth of field.",
+      "styleNotes": "Clean premium corporate studio portrait with trustworthy polish, soft light control, and executive presence."
+    },
+    {
+      "id": "ref_045",
+      "title": "Executive Office Headshot",
+      "category": "Business Portrait",
+      "tags": ["executive", "headshot", "office", "professional", "male"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "Hyper-realistic corporate executive headshot of a mid-40s man with a sharp jawline, short styled hair, and subtle stubble. He wears a fitted charcoal-gray suit jacket over a white shirt without a tie. Serious yet approachable expression, professional studio setup with even lighting, clean blurred office background, shallow depth of field, and premium business portrait realism.",
+      "styleNotes": "Modern executive portrait with approachable authority, office context, and clean premium headshot styling."
+    },
+    {
+      "id": "ref_046",
+      "title": "Wheat Field Surreal Couture",
+      "category": "Luxury Editorial",
+      "tags": ["woman", "fashion", "wheat field", "ethereal", "editorial"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A surreal fashion portrait of a graceful woman standing in a golden wheat field under a soft blue sky. She wears an elegant translucent flowing dress that blends with nature, with delicate botanical patterns and golden wheat textures embedded into the fabric. A wide artistic hat made of sheer flowing material extends dramatically around her head, merging with the wind and sky. The fabric appears to dissolve into floating wheat particles carried by the breeze. Cinematic lighting, soft natural sunlight, dreamy atmosphere, shallow depth of field, ultra-detailed, ethereal mood, fine-art photography, editorial fashion style, soft-focus background, dynamic motion in fabric, and a harmonious blue-and-gold palette.",
+      "styleNotes": "Luxury editorial concept blending couture fashion with organic field textures and ethereal movement."
+    },
+    {
+      "id": "ref_047",
+      "title": "Airport Travel Campaign",
+      "category": "Travel Style",
+      "tags": ["woman", "airport", "travel", "campaign", "modern"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "Cinematic travel photography of a stylish young woman walking through a modern airport terminal while pulling a pink hard-shell suitcase. She wears a loose pastel pink sweater, ripped skinny jeans, and beige sneakers. Confident expression, natural makeup, and hair slightly moving in the air. Shot from a low angle in full-body perspective. Large glass windows behind her reveal a commercial airplane taking off under a bright blue sky. Symmetrical rows of empty airport seats line both sides. Warm sunlight casts soft shadows and reflections on the glossy floor. Shallow depth of field, sharp focus on the woman, slightly blurred airplane, ultra-realistic, high detail, cinematic lighting, and travel magazine style.",
+      "styleNotes": "Modern travel-lifestyle campaign image with airport scale, clean symmetry, and fashionable accessible energy."
+    },
+    {
+      "id": "ref_048",
+      "title": "Pink Cyan Bob Cyber Beauty",
+      "category": "Cyberpunk",
+      "tags": ["woman", "cyberpunk", "beauty", "neon", "editorial"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic portrait of a young woman with a short asymmetrical blonde bob haircut, soft layered texture, glowing skin, and sharp facial features. She has striking blue eyes, natural makeup, smooth matte lips, and well-defined eyebrows. Cinematic neon lighting with vibrant pink and cyan glow casts dramatic highlights and shadows across her face and hair. Futuristic cyberpunk aesthetic, gradient background blending magenta and teal tones, soft rim lighting, high contrast, studio-quality lighting, shallow depth of field, ultra-detailed skin texture, professional fashion photography, sharp focus, and a modern digital-art feel.",
+      "styleNotes": "Contemporary neon beauty portrait with haircut emphasis, magenta-cyan lighting, and polished cyber fashion mood."
+    },
+    {
+      "id": "ref_049",
+      "title": "Rune-Painted Viking Warrior",
+      "category": "Viking Style",
+      "tags": ["warrior", "viking", "runes", "paint", "cinematic"],
+      "previewSourceKey": "man_front_color",
+      "useAsReference": true,
+      "prompt": "Ultra-realistic cinematic portrait of a rugged warrior man in his mid-40s with a strong masculine face, piercing blue eyes, and an intense expression. His face, head, neck, and upper chest are covered with ancient tribal war paint and rune-like symbols inspired by Norse and Viking mythology. Paint colors include deep red, burnt orange, teal blue, and black, with cracked weathered texture as if applied to aged skin. A central sacred sun symbol is painted on the forehead, with symmetrical tribal markings across the cheeks and temples. Thick grey beard, short rough hair, dramatic low-key lighting, dark black background, hyper-detailed skin texture, visible pores, wrinkles, paint cracks, shallow depth of field, cinematic color grading, moody atmosphere, ultra-sharp focus, and epic fantasy character energy.",
+      "styleNotes": "Powerful Norse-inspired warrior close-up with sacred symbols, painted ritual detail, and dark epic masculinity."
+    },
+    {
+      "id": "ref_050",
+      "title": "Fashion Sketch Park Walk",
+      "category": "Editorial Portrait",
+      "tags": ["woman", "fashion", "park", "illustration", "editorial"],
+      "previewSourceKey": "woman_front_color",
+      "useAsReference": true,
+      "prompt": "A cinematic fashion portrait of a young woman walking on a stone pathway in a lush green park. Soft natural daylight filters through the trees, and the shallow depth of field creates a creamy bokeh background. She wears black combat boots, fitted jeans, and a casual top, holding a jacket loosely off her shoulders. Her expression is calm and introspective, looking slightly downward while walking. A glowing white hand-drawn sketch outline overlays her outfit and body, blending fashion illustration with realistic photography. Ultra-realistic, editorial fashion style, clean composition, soft shadows, natural color grading, high detail, and modern aesthetic.",
+      "styleNotes": "Hybrid fashion-photo illustration look with clean natural park setting and subtle hand-drawn overlay effect."
+    }
+  ]
+}

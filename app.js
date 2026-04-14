@@ -8,6 +8,7 @@ const readyTemplateRoutes = require('./src/routes/readyTemplate.routes')
 const authRoutes = require('./src/routes/auth.routes')
 const visitorRoutes = require('./src/routes/visitor.routes')
 const googleRoutes = require('./src/routes/google.routes')
+const autogenerateRoutes = require('./src/routes/autogenerate.routes')
 
 const { GOOGLE_CLIENT_SECRET, FRONTEND_URL } = process.env
 const isProd =
@@ -39,6 +40,7 @@ app.use(cookieParser())
 app.use('/api/ready-templates', readyTemplateRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/visitor', visitorRoutes)
+app.use('/api/autogenerate', autogenerateRoutes)
 
 /** Google OAuth only **/
 app.set('trust proxy', 1)
