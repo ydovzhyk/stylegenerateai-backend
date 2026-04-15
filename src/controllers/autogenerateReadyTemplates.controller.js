@@ -11,7 +11,9 @@ const {
   askModelForJson,
 } = require('../services/openai/askModelForJson.service')
 
-const { generateReadyTemplatePreview } = require('../services/ready-template/openai-ready-template.service')
+const {
+  generateReadyTemplatePreview,
+} = require('../services/ready-template/openai-ready-template.service')
 
 const { saveTemplatePreview } = require('../helpers/saveTemplatePreview')
 
@@ -158,7 +160,80 @@ async function readReferencePrompts() {
   return Array.isArray(parsed?.items) ? parsed.items : []
 }
 
+function normalizeCategoryItems(categoryDoc) {
+  if (!categoryDoc) return []
+
+  if (Array.isArray(categoryDoc.items) && categoryDoc.items.length > 0) {
+    return categoryDoc.items
+      .map((item) => ({
+        value: String(item?.value || '').trim(),
+        dna:
+          item?.dna && typeof item.dna === 'object'
+            ? {
+                coreIdentity: String(item.dna.coreIdentity || '').trim(),
+                mustHave: Array.isArray(item.dna.mustHave)
+                  ? item.dna.mustHave
+                      .map((v) => String(v || '').trim())
+                      .filter(Boolean)
+                  : [],
+                mayUse: Array.isArray(item.dna.mayUse)
+                  ? item.dna.mayUse
+                      .map((v) => String(v || '').trim())
+                      .filter(Boolean)
+                  : [],
+                avoid: Array.isArray(item.dna.avoid)
+                  ? item.dna.avoid
+                      .map((v) => String(v || '').trim())
+                      .filter(Boolean)
+                  : [],
+              }
+            : {
+                coreIdentity: '',
+                mustHave: [],
+                mayUse: [],
+                avoid: [],
+              },
+      }))
+      .filter((item) => item.value)
+  }
+
+  if (Array.isArray(categoryDoc.values) && categoryDoc.values.length > 0) {
+    return categoryDoc.values
+      .map((value) => ({
+        value: String(value || '').trim(),
+        dna: {
+          coreIdentity: '',
+          mustHave: [],
+          mayUse: [],
+          avoid: [],
+        },
+      }))
+      .filter((item) => item.value)
+  }
+
+  return []
+}
+
+function buildSessionHistoryEntry(draft) {
+  const title = String(draft?.title || '').trim()
+  const category = String(draft?.category || '').trim()
+  const styleNotes = String(draft?.styleNotes || '').trim()
+  const tags = Array.isArray(draft?.tags)
+    ? draft.tags.map((item) => String(item || '').trim()).filter(Boolean)
+    : []
+
+  return {
+    title,
+    category,
+    tags: tags.slice(0, 6),
+    styleNotes,
+  }
+}
+
 const autogenerateReadyTemplatesController = async (req, res, next) => {
+  console.log('=== AUTOGENERATE CONTROLLER HIT ===')
+  console.log('BODY:', req.body)
+
   try {
     const {
       perCategory = 2,
@@ -186,18 +261,11 @@ const autogenerateReadyTemplatesController = async (req, res, next) => {
     }
 
     const categoryDoc = await Category.findOne().lean()
+    let categoryItems = normalizeCategoryItems(categoryDoc)
 
-    if (
-      !categoryDoc ||
-      !Array.isArray(categoryDoc.values) ||
-      !categoryDoc.values.length
-    ) {
+    if (!categoryItems.length) {
       throw RequestError(404, 'No categories found')
     }
-
-    let categories = categoryDoc.values
-      .map((item) => String(item || '').trim())
-      .filter(Boolean)
 
     if (Array.isArray(requestedCategories) && requestedCategories.length > 0) {
       const requestedSet = new Set(
@@ -206,21 +274,32 @@ const autogenerateReadyTemplatesController = async (req, res, next) => {
           .filter(Boolean),
       )
 
-      categories = categories.filter((item) => requestedSet.has(item))
+      categoryItems = categoryItems.filter((item) =>
+        requestedSet.has(item.value),
+      )
     }
 
     if (normalizedLimitCategories !== null) {
-      categories = categories.slice(0, normalizedLimitCategories)
+      categoryItems = categoryItems.slice(0, normalizedLimitCategories)
     }
 
-    if (!categories.length) {
+    if (!categoryItems.length) {
       throw RequestError(400, 'No matching categories selected for generation')
     }
 
+    console.log(
+      'CATEGORIES FROM DB:',
+      categoryItems.map((item) => ({
+        value: item.value,
+        dna: item.dna,
+      })),
+    )
+
     const referencePrompts = await readReferencePrompts()
+    const sessionHistory = []
 
     const report = {
-      totalCategories: categories.length,
+      totalCategories: categoryItems.length,
       requestedPerCategory: normalizedPerCategory,
       dryRun: normalizedDryRun,
       generatedDrafts: 0,
@@ -229,17 +308,40 @@ const autogenerateReadyTemplatesController = async (req, res, next) => {
       items: [],
     }
 
-    for (const category of categories) {
+    for (const categoryItem of categoryItems) {
+      const category = categoryItem.value
+      const categoryDNA = categoryItem.dna || {
+        coreIdentity: '',
+        mustHave: [],
+        mayUse: [],
+        avoid: [],
+      }
+
       let drafts = []
 
       try {
+        console.log(`Generating drafts for category: ${category}`)
+        console.log('CATEGORY DNA:', categoryDNA)
+
         drafts = await generateTemplateDrafts({
           category,
+          categoryDNA,
           perCategory: normalizedPerCategory,
           referencePrompts,
           askModelForJson,
+          sessionHistory,
         })
+
+        console.log('\n================ AI DRAFTS GENERATED ================')
+        console.log(`Category: ${category}`)
+        console.log(`Drafts count: ${drafts.length}`)
+        console.dir(drafts, { depth: null, colors: true })
+        console.log('====================================================\n')
       } catch (error) {
+        console.error('DRAFT GENERATION ERROR:')
+        console.error('Category:', category)
+        console.error(error)
+
         report.failedTemplates += normalizedPerCategory
         report.items.push({
           category,
@@ -304,6 +406,8 @@ const autogenerateReadyTemplatesController = async (req, res, next) => {
             })
             continue
           }
+
+          sessionHistory.push(buildSessionHistoryEntry(draft))
 
           if (normalizedDryRun) {
             report.items.push({

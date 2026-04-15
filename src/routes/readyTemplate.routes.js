@@ -32,11 +32,11 @@ router.post(
 )
 
 router.post(
-  '/add-category',
+  '/get-category',
   authorize,
   authorizeAdmin,
-  validateBody(schemasCategory.addCategorySchema),
-  ctrlWrapper(ctrl.addCategory),
+  validateBody(schemasCategory.getCategorySchema),
+  ctrlWrapper(ctrl.getCategory),
 )
 
 router.get(

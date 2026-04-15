@@ -109,12 +109,28 @@ function buildSystemPrompt() {
   return [
     'You are a senior creative director, portrait photographer, fashion editor, concept artist, and prompt designer for a commercial AI portrait platform.',
     'Your task is to create highly professional template prompts for image generation.',
+
     'You must design prompts that are visually strong, commercially usable, category-consistent, and clearly different from one another.',
+
+    'Each draft should explore a different visual concept, not just variations of the same theme.',
+    'Each category must have its own distinct visual identity, not just a renamed variation of the same editorial portrait.',
+
+    'Inside a single category, each draft must represent a clearly different visual scenario, not just a variation in styling.',
+    'Avoid reusing the same environment, lighting setup, or composition pattern within the same category.',
+
+    'Vary subject type, setting, wardrobe logic, lighting design, emotional tone, and composition approach across categories.',
+    'Actively diversify subject demographics, including gender, age, ethnicity, and character type where appropriate.',
+
+    'Avoid repeating the same visual motifs, materials, lighting styles, or scene structures across drafts, even if described with different words.',
+
+    'Do not default repeatedly to polished female luxury-editorial portraits unless the category explicitly requires it.',
+
     'Do not copy the reference prompts verbatim.',
+    'Do not reuse exact titles from reference examples.',
     'Do not repeat titles, adjective chains, composition patterns, or visual concepts unnecessarily.',
+
     'Do not include 4K, 8K, aspect ratio flags, model flags, version flags, or tool-specific suffixes.',
-    'Do not reuse exact titles from reference examples',
-    'Do not copy reference prompts sentence-by-sentence',
+
     'Keep prompts rich and descriptive, but clean and production-usable.',
     'Return valid JSON only.',
   ].join('\n')
@@ -122,9 +138,11 @@ function buildSystemPrompt() {
 
 function buildUserPrompt({
   category,
+  categoryDNA,
   perCategory,
   referenceExamples,
   allowedPreviewSourceKeys,
+  sessionHistory = [],
 }) {
   return [
     `Generate ${perCategory} new ready-template drafts for the category: "${category}".`,
@@ -151,13 +169,28 @@ function buildUserPrompt({
     'Reference examples:',
     escapeJsonForPrompt(referenceExamples),
     '',
+    'Category DNA:',
+    escapeJsonForPrompt(
+      categoryDNA || {
+        coreIdentity: '',
+        mustHave: [],
+        mayUse: [],
+        avoid: [],
+      },
+    ),
+    '',
+    'Current session generation history:',
+    sessionHistory.length > 0 ? escapeJsonForPrompt(sessionHistory) : '[]',
+    '',
+    'Below is the generation history from the current run. Avoid repeating or lightly rephrasing any of these concepts. Do not reuse the same title logic, subject archetype, setting, wardrobe concept, lighting setup, emotional tone, or scene structure unless the new draft is clearly distinct.',
+    '',
     'Return JSON with exactly this shape:',
     escapeJsonForPrompt({
       items: [
         {
           title: 'string',
           slug: 'string',
-          category: category,
+          category,
           tags: ['string', 'string', 'string'],
           basePrompt: 'string',
           previewSourceKey: 'string',
@@ -245,18 +278,19 @@ function validateUniqueDrafts(drafts = []) {
   }
 }
 
-/**
- * `askModelForJson` should be a function you plug in from your OpenAI layer.
- *
- * Expected signature:
- *   async function askModelForJson({ systemPrompt, userPrompt }) => parsedJson
- */
 async function generateTemplateDrafts({
   category,
+  categoryDNA = {
+    coreIdentity: '',
+    mustHave: [],
+    mayUse: [],
+    avoid: [],
+  },
   perCategory = 2,
   referencePrompts = [],
   askModelForJson,
   allowedPreviewSourceKeys = VALID_PREVIEW_SOURCE_KEYS,
+  sessionHistory = [],
 }) {
   if (!category) {
     throw new Error('category is required')
@@ -279,9 +313,11 @@ async function generateTemplateDrafts({
   const systemPrompt = buildSystemPrompt()
   const userPrompt = buildUserPrompt({
     category,
+    categoryDNA,
     perCategory,
     referenceExamples,
     allowedPreviewSourceKeys,
+    sessionHistory,
   })
 
   const parsed = await askModelForJson({
