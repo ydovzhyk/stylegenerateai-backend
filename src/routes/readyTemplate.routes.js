@@ -32,11 +32,11 @@ router.post(
 )
 
 router.post(
-  '/get-category',
+  '/resolve-prompt-metadata',
   authorize,
   authorizeAdmin,
   validateBody(schemasCategory.getCategorySchema),
-  ctrlWrapper(ctrl.getCategory),
+  ctrlWrapper(ctrl.resolvePromptMetadata),
 )
 
 router.get(

@@ -236,28 +236,31 @@ const autogenerateReadyTemplatesController = async (req, res, next) => {
 
   try {
     const {
+      mode,
       perCategory = 2,
-      limitCategories,
-      categories: requestedCategories = [],
+      selectedCategory,
+      rangeStart,
+      rangeEnd,
       dryRun = false,
     } = req.body || {}
 
+    const normalizedMode = String(mode || '').trim()
     const normalizedPerCategory = Number(perCategory)
-    const normalizedLimitCategories = limitCategories
-      ? Number(limitCategories)
-      : null
+    const normalizedSelectedCategory = String(selectedCategory || '').trim()
+    const normalizedRangeStart =
+      rangeStart === undefined || rangeStart === null
+        ? null
+        : Number(rangeStart)
+    const normalizedRangeEnd =
+      rangeEnd === undefined || rangeEnd === null ? null : Number(rangeEnd)
     const normalizedDryRun = normalizeBoolean(dryRun) ?? false
+
+    if (!['single', 'range'].includes(normalizedMode)) {
+      throw RequestError(400, 'mode must be either "single" or "range"')
+    }
 
     if (!Number.isInteger(normalizedPerCategory) || normalizedPerCategory < 1) {
       throw RequestError(400, 'perCategory must be a positive integer')
-    }
-
-    if (
-      normalizedLimitCategories !== null &&
-      (!Number.isInteger(normalizedLimitCategories) ||
-        normalizedLimitCategories < 1)
-    ) {
-      throw RequestError(400, 'limitCategories must be a positive integer')
     }
 
     const categoryDoc = await Category.findOne().lean()
@@ -267,20 +270,51 @@ const autogenerateReadyTemplatesController = async (req, res, next) => {
       throw RequestError(404, 'No categories found')
     }
 
-    if (Array.isArray(requestedCategories) && requestedCategories.length > 0) {
-      const requestedSet = new Set(
-        requestedCategories
-          .map((item) => String(item || '').trim())
-          .filter(Boolean),
-      )
+    const totalAvailableCategories = categoryItems.length
 
-      categoryItems = categoryItems.filter((item) =>
-        requestedSet.has(item.value),
+    if (normalizedMode === 'single') {
+      if (!normalizedSelectedCategory) {
+        throw RequestError(400, 'selectedCategory is required for single mode')
+      }
+
+      categoryItems = categoryItems.filter(
+        (item) => item.value === normalizedSelectedCategory,
       )
     }
 
-    if (normalizedLimitCategories !== null) {
-      categoryItems = categoryItems.slice(0, normalizedLimitCategories)
+    if (normalizedMode === 'range') {
+      if (
+        !Number.isInteger(normalizedRangeStart) ||
+        !Number.isInteger(normalizedRangeEnd)
+      ) {
+        throw RequestError(
+          400,
+          'rangeStart and rangeEnd must be positive integers',
+        )
+      }
+
+      if (normalizedRangeStart < 1 || normalizedRangeEnd < 1) {
+        throw RequestError(
+          400,
+          'rangeStart and rangeEnd must be positive integers',
+        )
+      }
+
+      if (normalizedRangeStart > normalizedRangeEnd) {
+        throw RequestError(400, 'rangeStart cannot be greater than rangeEnd')
+      }
+
+      if (normalizedRangeEnd > totalAvailableCategories) {
+        throw RequestError(
+          400,
+          `rangeEnd cannot be greater than total categories count (${totalAvailableCategories})`,
+        )
+      }
+
+      const startIndex = normalizedRangeStart - 1
+      const endIndexExclusive = normalizedRangeEnd
+
+      categoryItems = categoryItems.slice(startIndex, endIndexExclusive)
     }
 
     if (!categoryItems.length) {
@@ -299,6 +333,16 @@ const autogenerateReadyTemplatesController = async (req, res, next) => {
     const sessionHistory = []
 
     const report = {
+      mode: normalizedMode,
+      selectedCategory:
+        normalizedMode === 'single' ? normalizedSelectedCategory : null,
+      range:
+        normalizedMode === 'range'
+          ? {
+              start: normalizedRangeStart,
+              end: normalizedRangeEnd,
+            }
+          : null,
       totalCategories: categoryItems.length,
       requestedPerCategory: normalizedPerCategory,
       dryRun: normalizedDryRun,
@@ -427,6 +471,10 @@ const autogenerateReadyTemplatesController = async (req, res, next) => {
             buffer: sourceBuffer,
             mimeType: sourceMimeType,
             prompt: normalizedBasePrompt,
+            title: normalizedTitle,
+            category: normalizedCategory,
+            styleNotes: String(draft?.styleNotes || '').trim(),
+            tags: normalizedTags,
             outputId: 'portrait_2_3',
             photoQualityId: 'standard',
           })
@@ -462,7 +510,7 @@ const autogenerateReadyTemplatesController = async (req, res, next) => {
         } catch (error) {
           report.failedTemplates += 1
           report.items.push({
-            category,
+            category: draft?.category || category,
             title: draft?.title || null,
             slug: draft?.slug || null,
             status: 'failed',

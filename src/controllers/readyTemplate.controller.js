@@ -8,6 +8,9 @@ const {
 const {
   resolveCategoryFromPrompt,
 } = require('../services/ready-template/openai-resolve-category.service')
+const {
+  suggestTemplateMetadataFromPrompt,
+} = require('../services/ready-template/openai-suggest-template-metadata.service')
 
 function normalizeSlug(value = '') {
   return String(value)
@@ -246,7 +249,7 @@ const createReadyTemplate = async (req, res, next) => {
   }
 }
 
-const getCategory = async (req, res, next) => {
+const resolvePromptMetadata = async (req, res, next) => {
   try {
     const prompt = String(req.body?.prompt || '').trim()
 
@@ -271,6 +274,10 @@ const getCategory = async (req, res, next) => {
       throw RequestError(500, 'Failed to resolve category from prompt')
     }
 
+    let resolvedCategory = ''
+    let values = buildCategoryValues(existingItems)
+    let message = ''
+
     if (aiResult.type === 'existing') {
       const matched = findExistingCategoryByValue(
         existingItems,
@@ -281,14 +288,9 @@ const getCategory = async (req, res, next) => {
         throw RequestError(500, 'Resolved existing category was not found')
       }
 
-      return res.status(200).json({
-        promptCategory: matched.value,
-        values: buildCategoryValues(existingItems),
-        message: 'Existing category matched successfully',
-      })
-    }
-
-    if (aiResult.type === 'new') {
+      resolvedCategory = matched.value
+      message = 'Existing category matched successfully'
+    } else if (aiResult.type === 'new') {
       const sanitizedCategory = sanitizeGeneratedCategory(aiResult.category)
 
       if (!isValidGeneratedCategory(sanitizedCategory)) {
@@ -301,233 +303,38 @@ const getCategory = async (req, res, next) => {
       )
 
       if (duplicate) {
-        return res.status(200).json({
-          promptCategory: duplicate.value,
-          values: buildCategoryValues(existingItems),
-          message: 'Existing category matched successfully',
-        })
+        resolvedCategory = duplicate.value
+        message = 'Existing category matched successfully'
+      } else {
+        doc.items.push(sanitizedCategory)
+        await doc.save()
+
+        values = buildCategoryValues(doc.items)
+        resolvedCategory = sanitizedCategory.value
+        message = 'New category created successfully'
       }
-
-      doc.items.push(sanitizedCategory)
-      await doc.save()
-
-      const updatedValues = buildCategoryValues(doc.items)
-
-      return res.status(200).json({
-        promptCategory: sanitizedCategory.value,
-        values: updatedValues,
-        message: 'New category created successfully',
-      })
+    } else {
+      throw RequestError(500, 'Unknown category resolution result')
     }
 
-    throw RequestError(500, 'Unknown category resolution result')
-  } catch (e) {
-    next(e)
-  }
-}
-
-const getCategories = async (req, res, next) => {
-  try {
-    const doc = await Category.findOne().lean()
+    const metadata = await suggestTemplateMetadataFromPrompt({
+      prompt,
+      category: resolvedCategory,
+    })
 
     return res.status(200).json({
-      values: (doc?.items || []).map((item) => item.value),
+      promptCategory: resolvedCategory,
+      suggestedTitle: metadata.suggestedTitle,
+      suggestedTags: metadata.suggestedTags,
+      values,
+      message,
     })
   } catch (e) {
     next(e)
   }
 }
 
-module.exports = {
-  createReadyTemplate,
-  generateReadyTemplatePreview,
-  getCategory,
-  getCategories,
-}
-
-// const RequestError = require('../helpers/RequestError')
-// const { ReadyTemplate } = require('../models/readyTemplate.model')
-// const { Category } = require('../models/category.model')
-// const { saveTemplatePreview } = require('../helpers/saveTemplatePreview')
-// const {
-//   generateReadyTemplatePreview: generateReadyTemplatePreviewImage,
-// } = require('../services/ready-template/openai-ready-template.service')
-
-// function normalizeSlug(value = '') {
-//   return String(value)
-//     .toLowerCase()
-//     .trim()
-//     .replace(/[^a-z0-9\s-]/g, '')
-//     .replace(/\s+/g, '-')
-//     .replace(/-+/g, '-')
-//     .replace(/^-+|-+$/g, '')
-// }
-
-// function normalizeTags(tags) {
-//   if (Array.isArray(tags)) {
-//     return tags.map((tag) => String(tag).trim().toLowerCase()).filter(Boolean)
-//   }
-
-//   if (typeof tags === 'string') {
-//     return tags
-//       .split(',')
-//       .map((tag) => tag.trim().toLowerCase())
-//       .filter(Boolean)
-//   }
-
-//   return []
-// }
-
-// function normalizeBoolean(value) {
-//   if (typeof value === 'boolean') return value
-//   if (value === 'true') return true
-//   if (value === 'false') return false
-//   return undefined
-// }
-
-// function sanitizeGeneratedCategory(raw = {}) {
-//   const value = normalizeCategoryValue(raw?.value)
-
-//   return {
-//     value,
-//     dna: {
-//       coreIdentity: String(raw?.dna?.coreIdentity || '').trim(),
-//       mustHave: normalizeStringArray(raw?.dna?.mustHave),
-//       mayUse: normalizeStringArray(raw?.dna?.mayUse),
-//       avoid: normalizeStringArray(raw?.dna?.avoid),
-//     },
-//   }
-// }
-
-// function isValidGeneratedCategory(category) {
-//   if (!category?.value) return false
-//   if (category.value.length < 2 || category.value.length > 60) return false
-
-//   const dna = category?.dna || {}
-
-//   if (!String(dna.coreIdentity || '').trim()) return false
-//   if (!Array.isArray(dna.mustHave)) return false
-//   if (!Array.isArray(dna.mayUse)) return false
-//   if (!Array.isArray(dna.avoid)) return false
-
-//   return true
-// }
-
-// const generateReadyTemplatePreview = async (req, res, next) => {
-//   try {
-//     const {
-//       prompt,
-//       sourceMode,
-//       prototypeGender,
-//       prototypeView,
-//       prototypeTone,
-//       outputId,
-//       photoQualityId,
-//     } = req.body
-
-//     if (!req.file) {
-//       throw RequestError(400, 'Source image is required')
-//     }
-
-//     const result = await generateReadyTemplatePreviewImage({
-//       buffer: req.file.buffer,
-//       mimeType: req.file.mimetype,
-//       prompt,
-//       outputId,
-//       photoQualityId,
-//     })
-
-//     const previewUrl = `data:${result.mimeType};base64,${result.buffer.toString(
-//       'base64',
-//     )}`
-
-//     return res.status(200).json({
-//       previewUrl,
-//       mimeType: result.mimeType,
-//       promptUsed: result.promptUsed,
-//       output: result.output,
-//       photoQuality: result.photoQuality,
-//       meta: {
-//         sourceMode: sourceMode || null,
-//         prototypeGender: prototypeGender || null,
-//         prototypeView: prototypeView || null,
-//         prototypeTone: prototypeTone || null,
-//       },
-//       usage: result.usage || null,
-//       message: 'Preview generated successfully',
-//     })
-//   } catch (e) {
-//     next(e)
-//   }
-// }
-
-// const createReadyTemplate = async (req, res, next) => {
-//   try {
-//     const {
-//       title,
-//       slug,
-//       category,
-//       tags,
-//       basePrompt,
-//       isPublished,
-//       previewSourceKey,
-//       useInCreateYourLook,
-//     } = req.body
-
-//     if (!req.file) {
-//       throw RequestError(400, 'Preview image is required')
-//     }
-
-//     const normalizedSlug = normalizeSlug(slug || title)
-
-//     const existingTemplate = await ReadyTemplate.findOne({
-//       slug: normalizedSlug,
-//     })
-//     if (existingTemplate) {
-//       throw RequestError(409, 'Template with this slug already exists')
-//     }
-
-//     const preview = await saveTemplatePreview({
-//       buffer: req.file.buffer,
-//       slug: normalizedSlug,
-//       mimeType: req.file.mimetype,
-//     })
-
-//     const normalizedPublished = normalizeBoolean(isPublished)
-//     const normalizedUseInCreateYourLook = normalizeBoolean(useInCreateYourLook)
-//     const normalizedPreviewSourceKey = String(previewSourceKey || '').trim()
-
-//     if (normalizedUseInCreateYourLook && !normalizedPreviewSourceKey) {
-//       throw RequestError(
-//         400,
-//         'Create Your Look preview requires a prototype-based source key',
-//       )
-//     }
-
-//     const readyTemplate = await ReadyTemplate.create({
-//       title: title.trim(),
-//       slug: normalizedSlug,
-//       category: category.trim(),
-//       tags: normalizeTags(tags),
-//       basePrompt: basePrompt.trim(),
-//       ...(normalizedPublished !== undefined && {
-//         isPublished: normalizedPublished,
-//       }),
-//       previewUrl: preview.url,
-//       previewPath: preview.path,
-//       previewSourceKey: normalizedPreviewSourceKey,
-//       ...(normalizedUseInCreateYourLook !== undefined && {
-//         useInCreateYourLook: normalizedUseInCreateYourLook,
-//       }),
-//     })
-
-//     return res.status(201).json({ message: 'Ready template created successfully'})
-//   } catch (e) {
-//     next(e)
-//   }
-// }
-
-// const getCategory = async (req, res, next) => {
+// const resolvePromptMetadata = async (req, res, next) => {
 //   try {
 //     const prompt = String(req.body?.prompt || '').trim()
 
@@ -545,15 +352,7 @@ module.exports = {
 
 //     const aiResult = await resolveCategoryFromPrompt({
 //       prompt,
-//       categories: existingItems.map((item) => ({
-//         value: item.value,
-//         dna: {
-//           coreIdentity: item?.dna?.coreIdentity || '',
-//           mustHave: item?.dna?.mustHave || [],
-//           mayUse: item?.dna?.mayUse || [],
-//           avoid: item?.dna?.avoid || [],
-//         },
-//       })),
+//       categories: mapCategoryItemsForAI(existingItems),
 //     })
 
 //     if (!aiResult || typeof aiResult !== 'object') {
@@ -573,6 +372,7 @@ module.exports = {
 //       return res.status(200).json({
 //         promptCategory: matched.value,
 //         values: buildCategoryValues(existingItems),
+//         message: 'Existing category matched successfully',
 //       })
 //     }
 
@@ -592,6 +392,7 @@ module.exports = {
 //         return res.status(200).json({
 //           promptCategory: duplicate.value,
 //           values: buildCategoryValues(existingItems),
+//           message: 'Existing category matched successfully',
 //         })
 //       }
 
@@ -603,6 +404,7 @@ module.exports = {
 //       return res.status(200).json({
 //         promptCategory: sanitizedCategory.value,
 //         values: updatedValues,
+//         message: 'New category created successfully',
 //       })
 //     }
 
@@ -612,21 +414,21 @@ module.exports = {
 //   }
 // }
 
-// const getCategories = async (req, res, next) => {
-//   try {
-//     const doc = await Category.findOne().lean()
+const getCategories = async (req, res, next) => {
+  try {
+    const doc = await Category.findOne().lean()
 
-//     return res.status(200).json({
-//       values: (doc?.items || []).map((item) => item.value),
-//     })
-//   } catch (e) {
-//     next(e)
-//   }
-// }
+    return res.status(200).json({
+      values: (doc?.items || []).map((item) => item.value),
+    })
+  } catch (e) {
+    next(e)
+  }
+}
 
-// module.exports = {
-//   createReadyTemplate,
-//   generateReadyTemplatePreview,
-//   getCategory,
-//   getCategories,
-// }
+module.exports = {
+  createReadyTemplate,
+  generateReadyTemplatePreview,
+  resolvePromptMetadata,
+  getCategories,
+}

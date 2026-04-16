@@ -127,17 +127,40 @@ const generateReadyTemplatePreviewSchema = Joi.object({
 })
 
 const autogenerateReadyTemplatesSchema = Joi.object({
-  perCategory: Joi.number()
-    .integer()
-    .min(1)
-    .max(20)
-    .default(2),
-  limitCategories: Joi.number().integer().min(1).max(100).optional(),
-  categories: Joi.array().items(Joi.string().trim().min(2).max(50)).optional(),
-  dryRun: Joi.alternatives()
-    .try(Joi.boolean(), Joi.string().valid('true', 'false'))
-    .default(false),
+  mode: Joi.string().valid('single', 'range').required(),
+  perCategory: Joi.number().integer().min(1).max(20).required(),
+  selectedCategory: Joi.string().trim().allow('', null),
+  rangeStart: Joi.number().integer().min(1).allow(null),
+  rangeEnd: Joi.number().integer().min(1).allow(null),
+  dryRun: Joi.boolean().default(false),
 })
+  .custom((value, helpers) => {
+    if (
+      value.mode === 'single' &&
+      !String(value.selectedCategory || '').trim()
+    ) {
+      return helpers.error('any.invalid')
+    }
+
+    if (value.mode === 'range') {
+      if (
+        !Number.isInteger(value.rangeStart) ||
+        !Number.isInteger(value.rangeEnd)
+      ) {
+        return helpers.error('any.invalid')
+      }
+
+      if (value.rangeStart > value.rangeEnd) {
+        return helpers.error('any.invalid')
+      }
+    }
+
+    return value
+  }, 'autogenerate validation')
+  .messages({
+    'any.invalid':
+      'Invalid autogeneration payload: check mode, selectedCategory, rangeStart, and rangeEnd',
+  })
 
 module.exports = {
   ReadyTemplate,
