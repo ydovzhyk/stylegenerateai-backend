@@ -11,6 +11,9 @@ const {
 const {
   suggestTemplateMetadataFromPrompt,
 } = require('../services/ready-template/openai-suggest-template-metadata.service')
+const {
+  recalculateCategoryTemplatesCount,
+} = require('../helpers/recalculateCategoryTemplatesCount')
 
 function normalizeSlug(value = '') {
   return String(value)
@@ -224,10 +227,12 @@ const createReadyTemplate = async (req, res, next) => {
       )
     }
 
+    const normalizedCategory = normalizeCategoryValue(category)
+
     await ReadyTemplate.create({
       title: title.trim(),
       slug: normalizedSlug,
-      category: category.trim(),
+      category: normalizedCategory,
       tags: normalizeTags(tags),
       basePrompt: basePrompt.trim(),
       ...(normalizedPublished !== undefined && {
@@ -241,6 +246,8 @@ const createReadyTemplate = async (req, res, next) => {
       }),
     })
 
+    await recalculateCategoryTemplatesCount(normalizedCategory)
+
     return res
       .status(201)
       .json({ message: 'Ready template created successfully' })
@@ -248,6 +255,78 @@ const createReadyTemplate = async (req, res, next) => {
     next(e)
   }
 }
+
+// const createReadyTemplate = async (req, res, next) => {
+//   try {
+//     const {
+//       title,
+//       slug,
+//       category,
+//       tags,
+//       basePrompt,
+//       isPublished,
+//       previewSourceKey,
+//       useInCreateYourLook,
+//     } = req.body
+
+//     if (!req.file) {
+//       throw RequestError(400, 'Preview image is required')
+//     }
+
+//     const normalizedSlug = normalizeSlug(slug || title)
+
+//     const existingTemplate = await ReadyTemplate.findOne({
+//       slug: normalizedSlug,
+//     })
+
+//     if (existingTemplate) {
+//       throw RequestError(409, 'Template with this slug already exists')
+//     }
+
+//     const preview = await saveTemplatePreview({
+//       buffer: req.file.buffer,
+//       slug: normalizedSlug,
+//       mimeType: req.file.mimetype,
+//     })
+
+//     const normalizedPublished = normalizeBoolean(isPublished)
+//     const normalizedUseInCreateYourLook = normalizeBoolean(useInCreateYourLook)
+//     const normalizedPreviewSourceKey = String(previewSourceKey || '').trim()
+//     const normalizedCategory = normalizeCategoryValue(category)
+
+//     if (normalizedUseInCreateYourLook && !normalizedPreviewSourceKey) {
+//       throw RequestError(
+//         400,
+//         'Create Your Look preview requires a prototype-based source key',
+//       )
+//     }
+
+//     await ReadyTemplate.create({
+//       title: title.trim(),
+//       slug: normalizedSlug,
+//       category: normalizedCategory,
+//       tags: normalizeTags(tags),
+//       basePrompt: basePrompt.trim(),
+//       ...(normalizedPublished !== undefined && {
+//         isPublished: normalizedPublished,
+//       }),
+//       previewUrl: preview.url,
+//       previewPath: preview.path,
+//       previewSourceKey: normalizedPreviewSourceKey,
+//       ...(normalizedUseInCreateYourLook !== undefined && {
+//         useInCreateYourLook: normalizedUseInCreateYourLook,
+//       }),
+//     })
+
+//     await recalculateCategoryTemplatesCount(normalizedCategory)
+
+//     return res
+//       .status(201)
+//       .json({ message: 'Ready template created successfully' })
+//   } catch (e) {
+//     next(e)
+//   }
+// }
 
 const resolvePromptMetadata = async (req, res, next) => {
   try {
@@ -334,86 +413,6 @@ const resolvePromptMetadata = async (req, res, next) => {
   }
 }
 
-// const resolvePromptMetadata = async (req, res, next) => {
-//   try {
-//     const prompt = String(req.body?.prompt || '').trim()
-
-//     if (!prompt) {
-//       throw RequestError(400, 'Prompt is required')
-//     }
-
-//     let doc = await Category.findOne()
-
-//     if (!doc) {
-//       doc = await Category.create({ items: [] })
-//     }
-
-//     const existingItems = Array.isArray(doc.items) ? [...doc.items] : []
-
-//     const aiResult = await resolveCategoryFromPrompt({
-//       prompt,
-//       categories: mapCategoryItemsForAI(existingItems),
-//     })
-
-//     if (!aiResult || typeof aiResult !== 'object') {
-//       throw RequestError(500, 'Failed to resolve category from prompt')
-//     }
-
-//     if (aiResult.type === 'existing') {
-//       const matched = findExistingCategoryByValue(
-//         existingItems,
-//         aiResult.value || aiResult.promptCategory,
-//       )
-
-//       if (!matched) {
-//         throw RequestError(500, 'Resolved existing category was not found')
-//       }
-
-//       return res.status(200).json({
-//         promptCategory: matched.value,
-//         values: buildCategoryValues(existingItems),
-//         message: 'Existing category matched successfully',
-//       })
-//     }
-
-//     if (aiResult.type === 'new') {
-//       const sanitizedCategory = sanitizeGeneratedCategory(aiResult.category)
-
-//       if (!isValidGeneratedCategory(sanitizedCategory)) {
-//         throw RequestError(500, 'Generated category is invalid')
-//       }
-
-//       const duplicate = findExistingCategoryByValue(
-//         existingItems,
-//         sanitizedCategory.value,
-//       )
-
-//       if (duplicate) {
-//         return res.status(200).json({
-//           promptCategory: duplicate.value,
-//           values: buildCategoryValues(existingItems),
-//           message: 'Existing category matched successfully',
-//         })
-//       }
-
-//       doc.items.push(sanitizedCategory)
-//       await doc.save()
-
-//       const updatedValues = buildCategoryValues(doc.items)
-
-//       return res.status(200).json({
-//         promptCategory: sanitizedCategory.value,
-//         values: updatedValues,
-//         message: 'New category created successfully',
-//       })
-//     }
-
-//     throw RequestError(500, 'Unknown category resolution result')
-//   } catch (e) {
-//     next(e)
-//   }
-// }
-
 const getCategories = async (req, res, next) => {
   try {
     const doc = await Category.findOne().lean()
@@ -426,9 +425,70 @@ const getCategories = async (req, res, next) => {
   }
 }
 
+const getYourLookPreview = async (req, res, next) => {
+  try {
+    const rawLimit = Number(req.query?.limit)
+    const limit =
+      Number.isInteger(rawLimit) && rawLimit > 0 ? Math.min(rawLimit, 20) : 10
+
+    const baseQuery = {
+      isPublished: true,
+      useInCreateYourLook: true,
+      previewUrl: { $exists: true, $ne: '' },
+      previewSourceKey: { $exists: true, $ne: '' },
+    }
+
+    const commonSelect = {
+      title: 1,
+      slug: 1,
+      category: 1,
+      previewUrl: 1,
+      previewSourceKey: 1,
+      useInCreateYourLook: 1,
+      createdAt: 1,
+      _id: 1,
+    }
+
+    const [manTemplates, womanTemplates] = await Promise.all([
+      ReadyTemplate.find({
+        ...baseQuery,
+        previewSourceKey: { $regex: /^man_/i },
+      })
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .select(commonSelect)
+        .lean(),
+
+      ReadyTemplate.find({
+        ...baseQuery,
+        previewSourceKey: { $regex: /^woman_/i },
+      })
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .select(commonSelect)
+        .lean(),
+    ])
+
+    return res.status(200).json({
+      values: {
+        man: manTemplates,
+        woman: womanTemplates,
+      },
+      meta: {
+        limit,
+        manCount: manTemplates.length,
+        womanCount: womanTemplates.length,
+      },
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 module.exports = {
   createReadyTemplate,
   generateReadyTemplatePreview,
   resolvePromptMetadata,
   getCategories,
+  getYourLookPreview,
 }

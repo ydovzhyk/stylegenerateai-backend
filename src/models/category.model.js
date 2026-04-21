@@ -9,6 +9,16 @@ const categoryItemSchema = new Schema(
       required: true,
       trim: true,
     },
+    templatesCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    clickCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     dna: {
       coreIdentity: {
         type: String,

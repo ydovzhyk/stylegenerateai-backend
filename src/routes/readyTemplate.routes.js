@@ -46,4 +46,9 @@ router.get(
   ctrlWrapper(ctrl.getCategories),
 )
 
+router.get(
+  '/get-your-look-preview',
+  ctrlWrapper(ctrl.getYourLookPreview),
+)
+
 module.exports = router

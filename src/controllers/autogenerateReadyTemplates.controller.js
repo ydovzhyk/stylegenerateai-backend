@@ -10,10 +10,12 @@ const {
 const {
   askModelForJson,
 } = require('../services/openai/askModelForJson.service')
-
 const {
   generateReadyTemplatePreview,
 } = require('../services/ready-template/openai-ready-template.service')
+const {
+  recalculateCategoryTemplatesCount,
+} = require('../helpers/recalculateCategoryTemplatesCount')
 
 const { saveTemplatePreview } = require('../helpers/saveTemplatePreview')
 
@@ -497,6 +499,8 @@ const autogenerateReadyTemplatesController = async (req, res, next) => {
             basePrompt: normalizedBasePrompt,
             isPublished: true,
           })
+
+          await recalculateCategoryTemplatesCount(normalizedCategory)
 
           report.createdTemplates += 1
           report.items.push({
