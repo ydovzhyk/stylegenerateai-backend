@@ -43,8 +43,6 @@ router.post(
 
 router.get(
   '/categories',
-  authorize,
-  authorizeAdmin,
   ctrlWrapper(ctrl.getCategories),
 )
 
