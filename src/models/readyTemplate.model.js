@@ -162,9 +162,17 @@ const autogenerateReadyTemplatesSchema = Joi.object({
       'Invalid autogeneration payload: check mode, selectedCategory, rangeStart, and rangeEnd',
   })
 
+  const getYourLookSearchSchema = Joi.object({
+    query: Joi.string().trim().allow('').max(120),
+    category: Joi.string().trim().allow('', 'All').max(50),
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(20).default(10),
+  })
+
 module.exports = {
   ReadyTemplate,
   createReadyTemplateSchema,
   generateReadyTemplatePreviewSchema,
   autogenerateReadyTemplatesSchema,
+  getYourLookSearchSchema,
 }

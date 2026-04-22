@@ -1,12 +1,14 @@
 const express = require('express')
 const uploadImage = require('../middlewares/uploadImage')
 const validateBody = require('../middlewares/validateBody')
+const validateQuery = require('../middlewares/validateQuery')
 const ctrlWrapper = require('../helpers/ctrlWrapper')
 const authorizeAdmin = require('../middlewares/authorizeAdmin')
 const authorize = require('../middlewares/authorize')
 const {
   createReadyTemplateSchema,
   generateReadyTemplatePreviewSchema,
+  getYourLookSearchSchema,
 } = require('../models/readyTemplate.model')
 const { schemasCategory } = require('../models/category.model')
 const ctrl = require('../controllers/readyTemplate.controller')
@@ -49,6 +51,12 @@ router.get(
 router.get(
   '/get-your-look-preview',
   ctrlWrapper(ctrl.getYourLookPreview),
+)
+
+router.get(
+  '/get-your-look-search',
+  validateQuery(getYourLookSearchSchema),
+  ctrlWrapper(ctrl.getYourLookSearch),
 )
 
 module.exports = router

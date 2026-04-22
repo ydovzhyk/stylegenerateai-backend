@@ -103,6 +103,8 @@ function sanitizeGeneratedCategory(raw = {}) {
 
   return {
     value,
+    templatesCount: 0,
+    clickCount: 0,
     dna: {
       coreIdentity: String(raw?.dna?.coreIdentity || '').trim(),
       mustHave: uniqueStringArray(normalizeStringArray(raw?.dna?.mustHave)),
@@ -256,78 +258,6 @@ const createReadyTemplate = async (req, res, next) => {
   }
 }
 
-// const createReadyTemplate = async (req, res, next) => {
-//   try {
-//     const {
-//       title,
-//       slug,
-//       category,
-//       tags,
-//       basePrompt,
-//       isPublished,
-//       previewSourceKey,
-//       useInCreateYourLook,
-//     } = req.body
-
-//     if (!req.file) {
-//       throw RequestError(400, 'Preview image is required')
-//     }
-
-//     const normalizedSlug = normalizeSlug(slug || title)
-
-//     const existingTemplate = await ReadyTemplate.findOne({
-//       slug: normalizedSlug,
-//     })
-
-//     if (existingTemplate) {
-//       throw RequestError(409, 'Template with this slug already exists')
-//     }
-
-//     const preview = await saveTemplatePreview({
-//       buffer: req.file.buffer,
-//       slug: normalizedSlug,
-//       mimeType: req.file.mimetype,
-//     })
-
-//     const normalizedPublished = normalizeBoolean(isPublished)
-//     const normalizedUseInCreateYourLook = normalizeBoolean(useInCreateYourLook)
-//     const normalizedPreviewSourceKey = String(previewSourceKey || '').trim()
-//     const normalizedCategory = normalizeCategoryValue(category)
-
-//     if (normalizedUseInCreateYourLook && !normalizedPreviewSourceKey) {
-//       throw RequestError(
-//         400,
-//         'Create Your Look preview requires a prototype-based source key',
-//       )
-//     }
-
-//     await ReadyTemplate.create({
-//       title: title.trim(),
-//       slug: normalizedSlug,
-//       category: normalizedCategory,
-//       tags: normalizeTags(tags),
-//       basePrompt: basePrompt.trim(),
-//       ...(normalizedPublished !== undefined && {
-//         isPublished: normalizedPublished,
-//       }),
-//       previewUrl: preview.url,
-//       previewPath: preview.path,
-//       previewSourceKey: normalizedPreviewSourceKey,
-//       ...(normalizedUseInCreateYourLook !== undefined && {
-//         useInCreateYourLook: normalizedUseInCreateYourLook,
-//       }),
-//     })
-
-//     await recalculateCategoryTemplatesCount(normalizedCategory)
-
-//     return res
-//       .status(201)
-//       .json({ message: 'Ready template created successfully' })
-//   } catch (e) {
-//     next(e)
-//   }
-// }
-
 const resolvePromptMetadata = async (req, res, next) => {
   try {
     const prompt = String(req.body?.prompt || '').trim()
@@ -415,10 +345,23 @@ const resolvePromptMetadata = async (req, res, next) => {
 
 const getCategories = async (req, res, next) => {
   try {
+    const withCount = String(req.query?.withCount || '').trim() === 'true'
     const doc = await Category.findOne().lean()
 
+    const items = doc?.items || []
+
+    if (!withCount) {
+      return res.status(200).json({
+        values: items.map((item) => String(item?.value || '').trim()),
+      })
+    }
+
     return res.status(200).json({
-      values: (doc?.items || []).map((item) => item.value),
+      values: items.map((item) => ({
+        value: String(item?.value || '').trim(),
+        templatesCount: Number(item?.templatesCount || 0),
+        clickCount: Number(item?.clickCount || 0),
+      })),
     })
   } catch (e) {
     next(e)
@@ -485,10 +428,74 @@ const getYourLookPreview = async (req, res, next) => {
   }
 }
 
+const getYourLookSearch = async (req, res, next) => {
+  try {
+    const { query = '', category = 'All', page = 1, limit = 10 } = req.query
+
+    const skip = (page - 1) * limit
+
+    const baseFilter = {
+      isPublished: true,
+      previewUrl: { $exists: true, $ne: '' },
+    }
+
+    const filters = { ...baseFilter }
+
+    if (category && category !== 'All') {
+      filters.category = category
+    }
+
+    if (query) {
+      const searchTerms = query
+        .split(/\s+/)
+        .map((item) => item.trim())
+        .filter(Boolean)
+
+      if (searchTerms.length) {
+        filters.$and = searchTerms.map((term) => ({
+          $or: [
+            { title: { $regex: term, $options: 'i' } },
+            { category: { $regex: term, $options: 'i' } },
+            { tags: { $elemMatch: { $regex: term, $options: 'i' } } },
+          ],
+        }))
+      }
+    }
+
+    const commonSelect = {
+      title: 1,
+      slug: 1,
+      category: 1,
+      previewUrl: 1,
+      previewSourceKey: 1,
+      _id: 1,
+      createdAt: 1,
+    }
+
+    const templates = await ReadyTemplate.find(filters)
+      .sort({ createdAt: -1, _id: -1 })
+      .skip(skip)
+      .limit(limit + 1)
+      .select(commonSelect)
+      .lean()
+
+    const hasMore = templates.length > limit
+    const result = hasMore ? templates.slice(0, limit) : templates
+
+    return res.status(200).json({
+      templates: result,
+      hasMore,
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 module.exports = {
   createReadyTemplate,
   generateReadyTemplatePreview,
   resolvePromptMetadata,
   getCategories,
   getYourLookPreview,
+  getYourLookSearch,
 }
