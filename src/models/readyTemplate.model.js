@@ -169,10 +169,22 @@ const autogenerateReadyTemplatesSchema = Joi.object({
     limit: Joi.number().integer().min(1).max(20).default(10),
   })
 
+  const generateYourLookClientImageSchema = Joi.object({
+    templateId: Joi.string().trim().required(),
+    extraPrompt: Joi.string().trim().allow('').max(2000),
+    outputFormat: Joi.string()
+      .valid('portrait_2_3', 'square_1_1', 'landscape_3_2')
+      .required(),
+    photoQuality: Joi.string()
+      .valid('draft', 'standard', 'premium', 'print')
+      .default('standard'),
+  })
+
 module.exports = {
   ReadyTemplate,
   createReadyTemplateSchema,
   generateReadyTemplatePreviewSchema,
   autogenerateReadyTemplatesSchema,
   getYourLookSearchSchema,
+  generateYourLookClientImageSchema,
 }

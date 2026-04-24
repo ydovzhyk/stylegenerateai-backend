@@ -491,10 +491,73 @@ const getYourLookSearch = async (req, res, next) => {
   }
 }
 
+const generateYourLookClientImage = async (req, res, next) => {
+  try {
+    const { templateId, extraPrompt, outputFormat, photoQuality } = req.body
+
+    if (!req.file) {
+      throw RequestError(400, 'Client photo is required')
+    }
+
+    const template = await ReadyTemplate.findOne({
+      _id: templateId,
+      isPublished: true,
+    }).lean()
+
+    if (!template) {
+      throw RequestError(404, 'Template not found')
+    }
+
+    const basePrompt = String(template.basePrompt || '').trim()
+    const clientExtraPrompt = String(extraPrompt || '').trim()
+
+    if (!basePrompt) {
+      throw RequestError(400, 'Template prompt is missing')
+    }
+
+    const finalPrompt = [
+      basePrompt,
+      clientExtraPrompt
+        ? `Additional user instructions: ${clientExtraPrompt}`
+        : '',
+    ]
+      .filter(Boolean)
+      .join('\n\n')
+
+    const result = await generateReadyTemplatePreviewImage({
+      buffer: req.file.buffer,
+      mimeType: req.file.mimetype,
+      prompt: finalPrompt,
+      title: template.title,
+      category: template.category,
+      tags: template.tags || [],
+      outputId: outputFormat,
+      photoQualityId: photoQuality,
+    })
+
+    const previewUrl = `data:${result.mimeType};base64,${result.buffer.toString(
+      'base64',
+    )}`
+
+    return res.status(200).json({
+      previewUrl,
+      mimeType: result.mimeType,
+      templateId: template._id,
+      output: result.output,
+      photoQuality: result.photoQuality,
+      usage: result.usage || null,
+      message: 'Image generated successfully',
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 module.exports = {
   createReadyTemplate,
   generateReadyTemplatePreview,
   resolvePromptMetadata,
+  generateYourLookClientImage,
   getCategories,
   getYourLookPreview,
   getYourLookSearch,

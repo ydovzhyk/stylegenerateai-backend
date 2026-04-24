@@ -9,6 +9,7 @@ const {
   createReadyTemplateSchema,
   generateReadyTemplatePreviewSchema,
   getYourLookSearchSchema,
+  generateYourLookClientImageSchema,
 } = require('../models/readyTemplate.model')
 const { schemasCategory } = require('../models/category.model')
 const ctrl = require('../controllers/readyTemplate.controller')
@@ -55,6 +56,13 @@ router.get(
   '/get-your-look-search',
   validateQuery(getYourLookSearchSchema),
   ctrlWrapper(ctrl.getYourLookSearch),
+)
+
+router.post(
+  '/generate-your-look',
+  uploadImage.single('photo'),
+  validateBody(generateYourLookClientImageSchema),
+  ctrlWrapper(ctrl.generateYourLookClientImage),
 )
 
 module.exports = router
