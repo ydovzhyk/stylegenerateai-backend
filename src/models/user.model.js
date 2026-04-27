@@ -51,6 +51,22 @@ const userSchema = new Schema(
       type: [{ type: Schema.Types.ObjectId, ref: 'generatedImage' }],
       default: [],
     },
+    subscription: {
+      planKey: {
+        type: String,
+        enum: ['free', 'basic', 'pro'],
+        default: 'free',
+      },
+      status: {
+        type: String,
+        enum: ['free', 'active', 'past_due', 'canceled'],
+        default: 'free',
+      },
+      currentPeriodEnd: {
+        type: Date,
+        default: null,
+      },
+    },
   },
   { timestamps: true },
 )

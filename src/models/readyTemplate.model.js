@@ -71,6 +71,20 @@ const ReadyTemplateSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    generationCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    regenerationCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    lastGeneratedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true, versionKey: false },
 )
@@ -171,6 +185,7 @@ const autogenerateReadyTemplatesSchema = Joi.object({
 
   const generateYourLookClientImageSchema = Joi.object({
     templateId: Joi.string().trim().required(),
+    visitorId: Joi.string().trim().allow('').max(64),
     extraPrompt: Joi.string().trim().allow('').max(2000),
     outputFormat: Joi.string()
       .valid('portrait_2_3', 'square_1_1', 'landscape_3_2')
@@ -178,6 +193,9 @@ const autogenerateReadyTemplatesSchema = Joi.object({
     photoQuality: Joi.string()
       .valid('draft', 'standard', 'premium', 'print')
       .default('standard'),
+    isRegeneration: Joi.alternatives()
+      .try(Joi.boolean(), Joi.string().valid('true', 'false'))
+      .default(false),
   })
 
 module.exports = {

@@ -14,6 +14,11 @@ const {
 const {
   recalculateCategoryTemplatesCount,
 } = require('../helpers/recalculateCategoryTemplatesCount')
+const {
+  checkGenerationAccess,
+  incrementGenerationUsage,
+  buildUsageResponse,
+} = require('../services/generation-limit/generation-limit.service')
 
 function normalizeSlug(value = '') {
   return String(value)
@@ -443,6 +448,11 @@ const getYourLookSearch = async (req, res, next) => {
 
     if (category && category !== 'All') {
       filters.category = category
+
+      await Category.updateOne(
+        { 'items.value': category },
+        { $inc: { 'items.$.clickCount': 1 } },
+      )
     }
 
     if (query) {
@@ -491,13 +501,102 @@ const getYourLookSearch = async (req, res, next) => {
   }
 }
 
+// const generateYourLookClientImage = async (req, res, next) => {
+//   try {
+//     const { templateId, extraPrompt, outputFormat, photoQuality } = req.body
+
+//     if (!req.file) {
+//       throw RequestError(400, 'Client photo is required')
+//     }
+
+//     const isRegeneration =
+//       req.body.isRegeneration === true || req.body.isRegeneration === 'true'
+
+//     await ReadyTemplate.updateOne(
+//       { _id: templateId },
+//       {
+//         $inc: {
+//           generationCount: 1,
+//           ...(isRegeneration ? { regenerationCount: 1 } : {}),
+//         },
+//         $set: {
+//           lastGeneratedAt: new Date(),
+//         },
+//       },
+//     )
+
+//     const template = await ReadyTemplate.findOne({
+//       _id: templateId,
+//       isPublished: true,
+//     }).lean()
+
+//     if (!template) {
+//       throw RequestError(404, 'Template not found')
+//     }
+
+//     const basePrompt = String(template.basePrompt || '').trim()
+//     const clientExtraPrompt = String(extraPrompt || '').trim()
+
+//     if (!basePrompt) {
+//       throw RequestError(400, 'Template prompt is missing')
+//     }
+
+//     const finalPrompt = [
+//       basePrompt,
+//       clientExtraPrompt
+//         ? `Additional user instructions: ${clientExtraPrompt}`
+//         : '',
+//     ]
+//       .filter(Boolean)
+//       .join('\n\n')
+
+//     const result = await generateReadyTemplatePreviewImage({
+//       buffer: req.file.buffer,
+//       mimeType: req.file.mimetype,
+//       prompt: finalPrompt,
+//       title: template.title,
+//       category: template.category,
+//       tags: template.tags || [],
+//       outputId: outputFormat,
+//       photoQualityId: photoQuality,
+//     })
+
+//     const previewUrl = `data:${result.mimeType};base64,${result.buffer.toString(
+//       'base64',
+//     )}`
+
+//     return res.status(200).json({
+//       previewUrl,
+//       mimeType: result.mimeType,
+//       templateId: template._id,
+//       output: result.output,
+//       photoQuality: result.photoQuality,
+//       usage: result.usage || null,
+//       message: 'Image generated successfully',
+//     })
+//   } catch (e) {
+//     next(e)
+//   }
+// }
+
 const generateYourLookClientImage = async (req, res, next) => {
   try {
-    const { templateId, extraPrompt, outputFormat, photoQuality } = req.body
+    const { templateId, visitorId, extraPrompt, outputFormat, photoQuality } =
+      req.body
 
     if (!req.file) {
       throw RequestError(400, 'Client photo is required')
     }
+
+    const isRegeneration =
+      req.body.isRegeneration === true || req.body.isRegeneration === 'true'
+
+    const access = await checkGenerationAccess({
+      user: req.user,
+      visitorId,
+      outputFormat,
+      photoQuality,
+    })
 
     const template = await ReadyTemplate.findOne({
       _id: templateId,
@@ -535,6 +634,27 @@ const generateYourLookClientImage = async (req, res, next) => {
       photoQualityId: photoQuality,
     })
 
+    await Promise.all([
+      ReadyTemplate.updateOne(
+        { _id: template._id },
+        {
+          $inc: {
+            generationCount: 1,
+            ...(isRegeneration ? { regenerationCount: 1 } : {}),
+          },
+          $set: {
+            lastGeneratedAt: new Date(),
+          },
+        },
+      ),
+
+      incrementGenerationUsage({
+        user: req.user,
+        visitorId,
+        planKey: access.planKey,
+      }),
+    ])
+
     const previewUrl = `data:${result.mimeType};base64,${result.buffer.toString(
       'base64',
     )}`
@@ -545,7 +665,7 @@ const generateYourLookClientImage = async (req, res, next) => {
       templateId: template._id,
       output: result.output,
       photoQuality: result.photoQuality,
-      usage: result.usage || null,
+      usage: buildUsageResponse(access, true),
       message: 'Image generated successfully',
     })
   } catch (e) {

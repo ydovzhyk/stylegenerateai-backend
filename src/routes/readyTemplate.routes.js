@@ -4,6 +4,7 @@ const validateBody = require('../middlewares/validateBody')
 const validateQuery = require('../middlewares/validateQuery')
 const ctrlWrapper = require('../helpers/ctrlWrapper')
 const authorizeAdmin = require('../middlewares/authorizeAdmin')
+const authorizeOptional = require('../middlewares/authorizeOptional')
 const authorize = require('../middlewares/authorize')
 const {
   createReadyTemplateSchema,
@@ -60,6 +61,7 @@ router.get(
 
 router.post(
   '/generate-your-look',
+  authorizeOptional,
   uploadImage.single('photo'),
   validateBody(generateYourLookClientImageSchema),
   ctrlWrapper(ctrl.generateYourLookClientImage),
