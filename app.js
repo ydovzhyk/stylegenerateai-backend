@@ -9,6 +9,7 @@ const authRoutes = require('./src/routes/auth.routes')
 const visitorRoutes = require('./src/routes/visitor.routes')
 const googleRoutes = require('./src/routes/google.routes')
 const autogenerateRoutes = require('./src/routes/autogenerate.routes')
+const generationUsageRoutes = require('./src/routes/generationUsage.routes')
 
 const { GOOGLE_CLIENT_SECRET, FRONTEND_URL } = process.env
 const isProd =
@@ -41,6 +42,7 @@ app.use('/api/ready-templates', readyTemplateRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/visitor', visitorRoutes)
 app.use('/api/autogenerate', autogenerateRoutes)
+app.use('/api/generation-usage', generationUsageRoutes)
 
 /** Google OAuth only **/
 app.set('trust proxy', 1)
@@ -81,14 +83,19 @@ app.use('/api', (req, res) => {
 })
 
 app.use((err, req, res, next) => {
-  console.error(err)
-
   const status = err.status || 500
+  // Логимо тільки справжні помилки
+  if (status >= 500) {
+    console.error(err)
+  } else {
+    console.warn(`[${status}] ${err.message}`)
+  }
+
   const response = {
     message: err.message || 'Server error',
   }
 
-  if (!isProd) {
+  if (!isProd && status >= 500) {
     response.stack = err.stack
   }
 

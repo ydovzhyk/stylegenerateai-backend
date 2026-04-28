@@ -5,6 +5,7 @@ const { User } = require('../models/user.model')
 const RequestError = require('../helpers/RequestError')
 const { saveUserAvatar } = require('../helpers/saveUserAvatar')
 const sendPasswordResetEmail = require('../helpers/sendPasswordResetEmail')
+const linkVisitorToUser = require('../helpers/linkVisitorToUser')
 const { SECRET_KEY, REFRESH_SECRET_KEY } = process.env
 
 const isProd =
@@ -74,6 +75,11 @@ const serializeUser = (user) => {
     email: user.email,
     userAvatar: user.userAvatar,
     role: user.role,
+    subscription: user.subscription || {
+      planKey: 'free',
+      status: 'free',
+      currentPeriodEnd: null,
+    },
     likedImages: user.likedImages || [],
     savedImages: user.savedImages || [],
     createdAt: user.createdAt,
@@ -84,7 +90,7 @@ const serializeUser = (user) => {
 // REGISTER NEW USER
 const register = async (req, res, next) => {
   try {
-    const { name, email, password, userAvatar } = req.body
+    const { name, email, password, userAvatar, visitorId } = req.body
 
     const exists = await User.findOne({ email })
     if (exists) throw RequestError(409, 'Email in use')
@@ -99,10 +105,16 @@ const register = async (req, res, next) => {
       role: 'user',
     })
 
+    const linkedUser =
+      (await linkVisitorToUser({
+        userId: newUser._id,
+        visitorId,
+      })) || newUser
+
     const { accessToken, refreshToken } = signTokens(newUser._id)
     setAuthCookies(res, { accessToken, refreshToken })
 
-    return res.status(201).json({ user: serializeUser(newUser) })
+    return res.status(201).json({ user: serializeUser(linkedUser) })
   } catch (e) {
     next(e)
   }
@@ -111,7 +123,7 @@ const register = async (req, res, next) => {
 // LOGIN EXISTING USER
 const login = async (req, res, next) => {
   try {
-    const { email, password } = req.body
+    const { email, password, visitorId } = req.body
 
     const user = await User.findOne({ email })
     if (!user) throw RequestError(400, 'Invalid email or password')
@@ -119,10 +131,16 @@ const login = async (req, res, next) => {
     const ok = await bcrypt.compare(password, user.passwordHash)
     if (!ok) throw RequestError(400, 'Invalid email or password')
 
+    const linkedUser =
+      (await linkVisitorToUser({
+        userId: user._id,
+        visitorId,
+      })) || user
+
     const { accessToken, refreshToken } = signTokens(user._id)
     setAuthCookies(res, { accessToken, refreshToken })
 
-    return res.status(200).json({ user: serializeUser(user) })
+    return res.status(200).json({ user: serializeUser(linkedUser) })
   } catch (e) {
     next(e)
   }
@@ -213,7 +231,7 @@ const editUserController = async (req, res, next) => {
     }
 
     const user = await User.findOneAndUpdate({ _id }, updatedUserData, {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     })
 
@@ -253,6 +271,12 @@ const deleteUserController = async (req, res, next) => {
 const googleAuthController = async (req, res, next) => {
   try {
     const origin = req.session?.origin || FRONTEND_URL
+    const visitorId = req.session?.visitorId || ''
+
+    await linkVisitorToUser({
+      userId: req.user._id,
+      visitorId,
+    })
 
     const { accessToken, refreshToken } = signTokens(req.user._id)
     setAuthCookies(res, { accessToken, refreshToken })

@@ -67,6 +67,22 @@ const userSchema = new Schema(
         default: null,
       },
     },
+    linkedVisitors: {
+      type: [
+        {
+          visitorId: {
+            type: String,
+            required: true,
+            trim: true,
+          },
+          linkedAt: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      ],
+      default: [],
+    },
   },
   { timestamps: true },
 )
@@ -80,11 +96,13 @@ const registerSchema = Joi.object({
   password: Joi.string().min(6).required(),
   name: Joi.string().min(2).max(25).required(),
   userAvatar: Joi.string().allow('').required(),
+  visitorId: Joi.string().trim().allow('').max(64),
 })
 
 const loginSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
+  visitorId: Joi.string().trim().allow('').max(64),
 })
 
 const editUserSchema = Joi.object({

@@ -6,10 +6,14 @@ const passport = require('../middlewares/google-auth')
 const router = express.Router()
 
 router.get('/', (req, res, next) => {
-  const { origin } = req.query
+  const { origin, visitorId } = req.query
+
   req.session.origin = origin
+  req.session.visitorId = String(visitorId || '').trim()
+
   req.session.save((err) => {
     if (err) return next(err)
+
     return passport.authenticate('google', {
       scope: ['email', 'profile'],
     })(req, res, next)
