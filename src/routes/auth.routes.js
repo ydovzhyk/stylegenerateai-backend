@@ -9,6 +9,13 @@ const uploadImage = require('../middlewares/uploadImage')
 const { schemas } = require('../models/user.model')
 const router = express.Router()
 
+// Send register code
+router.post(
+  '/register/send-code',
+  validateBody(schemas.verficationCodeSchema),
+  ctrlWrapper(ctrl.sendRegisterCode),
+)
+
 // Register user
 router.post(
   '/register',

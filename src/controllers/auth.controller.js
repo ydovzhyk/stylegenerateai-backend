@@ -6,6 +6,8 @@ const RequestError = require('../helpers/RequestError')
 const { saveUserAvatar } = require('../helpers/saveUserAvatar')
 const sendPasswordResetEmail = require('../helpers/sendPasswordResetEmail')
 const linkVisitorToUser = require('../helpers/linkVisitorToUser')
+const sendRegisterVerificationEmail = require('../helpers/sendRegisterVerificationEmail')
+
 const { SECRET_KEY, REFRESH_SECRET_KEY } = process.env
 
 const isProd =
@@ -25,6 +27,8 @@ const COOKIE_BASE = {
 const ACCESS_TTL_MS = 2 * 60 * 1000 // 2m
 const REFRESH_TTL_MS = 24 * 60 * 60 * 1000 // 24h
 
+const REGISTER_CODE_TTL_MS = 10 * 60 * 1000 // 10m
+
 const msToJwt = (ms) => `${Math.floor(ms / 1000)}s`
 
 const ACCESS_COOKIE_OPTIONS = {
@@ -35,6 +39,11 @@ const ACCESS_COOKIE_OPTIONS = {
 const REFRESH_COOKIE_OPTIONS = {
   ...COOKIE_BASE,
   maxAge: REFRESH_TTL_MS,
+}
+
+const REGISTER_CODE_COOKIE_OPTIONS = {
+  ...COOKIE_BASE,
+  maxAge: REGISTER_CODE_TTL_MS,
 }
 
 const setAuthCookies = (res, { accessToken, refreshToken }) => {
@@ -65,6 +74,27 @@ const signTokens = (userId, { refresh = true } = {}) => {
   return { accessToken, refreshToken }
 }
 
+// FERIFICATION CODE FOR REGISTRATION
+const normalizeEmail = (email) =>
+  String(email || '')
+    .trim()
+    .toLowerCase()
+
+const generateRegisterCode = () =>
+  String(Math.floor(100000 + Math.random() * 900000))
+
+const hashRegisterCode = ({ email, code }) => {
+  return crypto
+    .createHash('sha256')
+    .update(`${normalizeEmail(email)}:${String(code).trim()}:${SECRET_KEY}`)
+    .digest('hex')
+}
+
+const clearRegisterCodeCookie = (res) => {
+  res.clearCookie('registerCodeHash', COOKIE_BASE)
+  res.clearCookie('registerEmail', COOKIE_BASE)
+}
+
 // USER RESPONSE SHAPE
 const serializeUser = (user) => {
   if (!user) return null
@@ -87,10 +117,65 @@ const serializeUser = (user) => {
   }
 }
 
+// SEND VERIFICATION CODE TO EMAIL
+const sendRegisterCode = async (req, res, next) => {
+  try {
+    const email = normalizeEmail(req.body.email)
+
+    if (!email) {
+      throw RequestError(400, 'Email is required')
+    }
+
+    const exists = await User.findOne({ email }).select('_id').lean()
+    if (exists) {
+      throw RequestError(409, 'Email in use')
+    }
+
+    const code = generateRegisterCode()
+    const codeHash = hashRegisterCode({ email, code })
+
+    res.cookie('registerCodeHash', codeHash, REGISTER_CODE_COOKIE_OPTIONS)
+    res.cookie('registerEmail', email, REGISTER_CODE_COOKIE_OPTIONS)
+
+    await sendRegisterVerificationEmail({ email, code })
+
+    return res.status(200).json({
+      message: 'Verification code has been sent to your email.',
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
 // REGISTER NEW USER
 const register = async (req, res, next) => {
   try {
-    const { name, email, password, userAvatar, visitorId } = req.body
+    const { name, password, userAvatar, code } = req.body
+
+    const email = normalizeEmail(req.body.email)
+    const visitorId = String(req.cookies?.visitorId || '').trim()
+
+    const safeCode = String(code || '').trim()
+    const cookieCodeHash = String(req.cookies?.registerCodeHash || '').trim()
+    const cookieEmail = normalizeEmail(req.cookies?.registerEmail)
+
+    if (!safeCode) {
+      throw RequestError(400, 'Verification code is required')
+    }
+
+    if (!cookieCodeHash || !cookieEmail) {
+      throw RequestError(400, 'Verification code has expired')
+    }
+
+    if (cookieEmail !== email) {
+      throw RequestError(400, 'Verification email does not match')
+    }
+
+    const expectedHash = hashRegisterCode({ email, code: safeCode })
+
+    if (expectedHash !== cookieCodeHash) {
+      throw RequestError(400, 'Invalid verification code')
+    }
 
     const exists = await User.findOne({ email })
     if (exists) throw RequestError(409, 'Email in use')
@@ -113,6 +198,7 @@ const register = async (req, res, next) => {
 
     const { accessToken, refreshToken } = signTokens(newUser._id)
     setAuthCookies(res, { accessToken, refreshToken })
+    clearRegisterCodeCookie(res)
 
     return res.status(201).json({ user: serializeUser(linkedUser) })
   } catch (e) {
@@ -123,10 +209,12 @@ const register = async (req, res, next) => {
 // LOGIN EXISTING USER
 const login = async (req, res, next) => {
   try {
-    const { email, password, visitorId } = req.body
+    const { email, password } = req.body
 
     const user = await User.findOne({ email })
     if (!user) throw RequestError(400, 'Invalid email or password')
+
+    const visitorId = String(req.cookies?.visitorId || '').trim()
 
     const ok = await bcrypt.compare(password, user.passwordHash)
     if (!ok) throw RequestError(400, 'Invalid email or password')
@@ -271,7 +359,7 @@ const deleteUserController = async (req, res, next) => {
 const googleAuthController = async (req, res, next) => {
   try {
     const origin = req.session?.origin || FRONTEND_URL
-    const visitorId = req.session?.visitorId || ''
+    const visitorId = String(req.cookies?.visitorId || '').trim()
 
     await linkVisitorToUser({
       userId: req.user._id,
@@ -364,6 +452,7 @@ const resetPasswordController = async (req, res, next) => {
 }
 
 module.exports = {
+  sendRegisterCode,
   register,
   login,
   logout,

@@ -91,18 +91,27 @@ userSchema.post('save', handleSaveErrors)
 
 const User = model('user', userSchema)
 
+const verficationCodeSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+})
+
 const registerSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
   name: Joi.string().min(2).max(25).required(),
   userAvatar: Joi.string().allow('').required(),
-  visitorId: Joi.string().trim().allow('').max(64),
+  code: Joi.string()
+    .pattern(/^\d{6}$/)
+    .required()
+    .messages({
+      'string.pattern.base': 'Verification code must be 6 digits',
+      'any.required': 'Verification code is required',
+    }),
 })
 
 const loginSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
-  visitorId: Joi.string().trim().allow('').max(64),
 })
 
 const editUserSchema = Joi.object({
@@ -176,6 +185,7 @@ const updateUserSchema = Joi.object({
 }).or('likedImageId', 'unlikedImageId', 'savedImageId', 'unsavedImageId')
 
 const schemas = {
+  verficationCodeSchema,
   registerSchema,
   loginSchema,
   editUserSchema,
